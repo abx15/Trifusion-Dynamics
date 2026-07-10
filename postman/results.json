@@ -1,0 +1,4716 @@
+{
+  "collection": {
+    "item": [
+      {
+        "id": "69d82d56-a1c2-4bbf-9226-fa588b484f6b",
+        "name": "00-Full-Flow-Smoke-Test",
+        "item": [
+          {
+            "id": "b3fb9b7f-7730-4eb5-9f19-217a8ec83569",
+            "name": "1. Register",
+            "request": {
+              "url": {
+                "path": [
+                  "api",
+                  "auth",
+                  "register"
+                ],
+                "host": [
+                  "{{base_url}}"
+                ],
+                "query": [],
+                "variable": []
+              },
+              "header": [
+                {
+                  "key": "Authorization",
+                  "value": "Bearer {{admin_token}}"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "method": "POST",
+              "body": {
+                "mode": "raw",
+                "raw": "{\n  \"email\": \"admin@test.com\",\n  \"password\": \"password\",\n  \"name\": \"Admin\"\n}"
+              }
+            },
+            "response": [],
+            "event": [
+              {
+                "listen": "test",
+                "script": {
+                  "id": "c71db043-65e2-4d16-bca7-1d75bc9082fc",
+                  "type": "text/javascript",
+                  "exec": [
+                    "pm.test('Status is OK', function() { pm.expect(pm.response.code).to.be.oneOf([200, 201]); });"
+                  ],
+                  "_lastExecutionId": "a60bb9aa-c8e1-4f6c-aae8-53929d0c0657"
+                }
+              }
+            ]
+          },
+          {
+            "id": "43f2196c-ea9f-4026-967f-963407ed46b4",
+            "name": "2. Login",
+            "request": {
+              "url": {
+                "path": [
+                  "api",
+                  "auth",
+                  "login"
+                ],
+                "host": [
+                  "{{base_url}}"
+                ],
+                "query": [],
+                "variable": []
+              },
+              "header": [
+                {
+                  "key": "Authorization",
+                  "value": "Bearer {{admin_token}}"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "method": "POST",
+              "body": {
+                "mode": "raw",
+                "raw": "{\n  \"email\": \"admin@test.com\",\n  \"password\": \"password\"\n}"
+              }
+            },
+            "response": [],
+            "event": [
+              {
+                "listen": "test",
+                "script": {
+                  "id": "9b7eb71c-2032-477a-be25-73ea4e5f8a99",
+                  "type": "text/javascript",
+                  "exec": [
+                    "pm.test('Status is OK', function() { pm.expect(pm.response.code).to.be.oneOf([200, 201]); });",
+                    "   var json = pm.response.json();",
+                    "   pm.environment.set(\"admin_token\", json.accessToken);"
+                  ],
+                  "_lastExecutionId": "be988554-6304-4c62-ade0-dfae3005bb35"
+                }
+              }
+            ]
+          },
+          {
+            "id": "feb0347b-66d7-41bb-8df2-2520d3c8e40e",
+            "name": "3. Submit Contact Form",
+            "request": {
+              "url": {
+                "path": [
+                  "api",
+                  "cms",
+                  "leads"
+                ],
+                "host": [
+                  "{{base_url}}"
+                ],
+                "query": [],
+                "variable": []
+              },
+              "header": [
+                {
+                  "key": "Authorization",
+                  "value": "Bearer {{admin_token}}"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "method": "POST",
+              "body": {
+                "mode": "raw",
+                "raw": "{\n  \"name\": \"John Doe\",\n  \"email\": \"john@doe.com\",\n  \"message\": \"Interested in services\"\n}"
+              }
+            },
+            "response": [],
+            "event": [
+              {
+                "listen": "test",
+                "script": {
+                  "id": "ad8f78f2-0a43-457a-9d01-7d0a8ca26b99",
+                  "type": "text/javascript",
+                  "exec": [
+                    "pm.test('Status is OK', function() { pm.expect(pm.response.code).to.be.oneOf([200, 201]); });",
+                    "   var json = pm.response.json();",
+                    "   pm.environment.set(\"cms_lead_id\", json.id);"
+                  ],
+                  "_lastExecutionId": "c40a229a-e1c2-4933-8e1d-872f20242077"
+                }
+              }
+            ]
+          },
+          {
+            "id": "969c49cb-f29a-4b17-bdea-55e837a336cc",
+            "name": "4. Promote to CRM Lead",
+            "request": {
+              "url": {
+                "path": [
+                  "api",
+                  "crm",
+                  "leads"
+                ],
+                "host": [
+                  "{{base_url}}"
+                ],
+                "query": [],
+                "variable": []
+              },
+              "header": [
+                {
+                  "key": "Authorization",
+                  "value": "Bearer {{admin_token}}"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "method": "POST",
+              "body": {
+                "mode": "raw",
+                "raw": "{\n  \"firstName\": \"John\",\n  \"lastName\": \"Doe\",\n  \"email\": \"john@doe.com\"\n}"
+              }
+            },
+            "response": [],
+            "event": [
+              {
+                "listen": "test",
+                "script": {
+                  "id": "aad6a3c6-0e6b-4f7c-90f6-4416bed4bcee",
+                  "type": "text/javascript",
+                  "exec": [
+                    "pm.test('Status is OK', function() { pm.expect(pm.response.code).to.be.oneOf([200, 201]); });",
+                    "   var json = pm.response.json();",
+                    "   pm.environment.set(\"lead_id\", json.id);"
+                  ],
+                  "_lastExecutionId": "c68aeb40-fcd0-4439-ac30-261f4d8c7f4a"
+                }
+              }
+            ]
+          },
+          {
+            "id": "256bab67-34dc-417a-b73d-6e7165ad6282",
+            "name": "5. Move Lead to WON",
+            "request": {
+              "url": {
+                "path": [
+                  "api",
+                  "crm",
+                  "leads",
+                  "{{lead_id}}",
+                  "stage"
+                ],
+                "host": [
+                  "{{base_url}}"
+                ],
+                "query": [],
+                "variable": []
+              },
+              "header": [
+                {
+                  "key": "Authorization",
+                  "value": "Bearer {{admin_token}}"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "method": "PATCH",
+              "body": {
+                "mode": "raw",
+                "raw": "{\n  \"stage\": \"WON\"\n}"
+              }
+            },
+            "response": [],
+            "event": [
+              {
+                "listen": "test",
+                "script": {
+                  "id": "95ac56d6-31e9-4a90-bba4-03dd0bae2b90",
+                  "type": "text/javascript",
+                  "exec": [
+                    "pm.test('Status is OK', function() { pm.expect(pm.response.code).to.be.oneOf([200, 201]); });"
+                  ],
+                  "_lastExecutionId": "06eefc44-67a2-4c68-a140-440b6874faf1"
+                }
+              }
+            ]
+          },
+          {
+            "id": "8cb88441-efe5-48eb-b030-59d75eec7005",
+            "name": "6. Convert Lead to Client",
+            "request": {
+              "url": {
+                "path": [
+                  "api",
+                  "crm",
+                  "leads",
+                  "{{lead_id}}",
+                  "convert"
+                ],
+                "host": [
+                  "{{base_url}}"
+                ],
+                "query": [],
+                "variable": []
+              },
+              "header": [
+                {
+                  "key": "Authorization",
+                  "value": "Bearer {{admin_token}}"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "method": "POST",
+              "body": {
+                "mode": "raw",
+                "raw": "{}"
+              }
+            },
+            "response": [],
+            "event": [
+              {
+                "listen": "test",
+                "script": {
+                  "id": "ab4a1c02-b849-4fe6-8f46-76ca51b344b3",
+                  "type": "text/javascript",
+                  "exec": [
+                    "pm.test('Status is OK', function() { pm.expect(pm.response.code).to.be.oneOf([200, 201]); });",
+                    "   var json = pm.response.json();",
+                    "   pm.environment.set(\"client_id\", json.id);"
+                  ],
+                  "_lastExecutionId": "9e743e3c-6944-4dd6-b906-52ee5db3738e"
+                }
+              }
+            ]
+          },
+          {
+            "id": "72ed2994-2222-4e28-959f-1eaa84fa2862",
+            "name": "7. Create Project",
+            "request": {
+              "url": {
+                "path": [
+                  "api",
+                  "projects"
+                ],
+                "host": [
+                  "{{base_url}}"
+                ],
+                "query": [],
+                "variable": []
+              },
+              "header": [
+                {
+                  "key": "Authorization",
+                  "value": "Bearer {{admin_token}}"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "method": "POST",
+              "body": {
+                "mode": "raw",
+                "raw": "{\n  \"name\": \"Website Redesign\",\n  \"clientId\": \"{{client_id}}\"\n}"
+              }
+            },
+            "response": [],
+            "event": [
+              {
+                "listen": "test",
+                "script": {
+                  "id": "c56a3609-0b07-499f-9442-972b2b051725",
+                  "type": "text/javascript",
+                  "exec": [
+                    "pm.test('Status is OK', function() { pm.expect(pm.response.code).to.be.oneOf([200, 201]); });",
+                    "   var json = pm.response.json();",
+                    "   pm.environment.set(\"project_id\", json.id);"
+                  ],
+                  "_lastExecutionId": "f7d93a3d-93bd-49eb-9497-a1734b0ab2ca"
+                }
+              }
+            ]
+          },
+          {
+            "id": "45f21158-4c8b-4693-8966-73ecc5ff7cf5",
+            "name": "8a. Create Task 1",
+            "request": {
+              "url": {
+                "path": [
+                  "api",
+                  "projects",
+                  "{{project_id}}",
+                  "tasks"
+                ],
+                "host": [
+                  "{{base_url}}"
+                ],
+                "query": [],
+                "variable": []
+              },
+              "header": [
+                {
+                  "key": "Authorization",
+                  "value": "Bearer {{admin_token}}"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "method": "POST",
+              "body": {
+                "mode": "raw",
+                "raw": "{\n  \"name\": \"Design Mockups\",\n  \"assigneeId\": \"user_id_placeholder\"\n}"
+              }
+            },
+            "response": [],
+            "event": [
+              {
+                "listen": "test",
+                "script": {
+                  "id": "046734e7-96c3-426f-83b8-b92695e6adaa",
+                  "type": "text/javascript",
+                  "exec": [
+                    "pm.test('Status is OK', function() { pm.expect(pm.response.code).to.be.oneOf([200, 201]); });",
+                    "   var json = pm.response.json();",
+                    "   pm.environment.set(\"task_id\", json.id);"
+                  ],
+                  "_lastExecutionId": "9c9d53f8-669f-430e-aeec-9af16f31c9da"
+                }
+              }
+            ]
+          },
+          {
+            "id": "726a020f-2ec4-4245-8bc6-e76e566dab4b",
+            "name": "8b. Move Task to DONE",
+            "request": {
+              "url": {
+                "path": [
+                  "api",
+                  "tasks",
+                  "{{task_id}}",
+                  "move"
+                ],
+                "host": [
+                  "{{base_url}}"
+                ],
+                "query": [],
+                "variable": []
+              },
+              "header": [
+                {
+                  "key": "Authorization",
+                  "value": "Bearer {{admin_token}}"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "method": "PATCH",
+              "body": {
+                "mode": "raw",
+                "raw": "{\n  \"status\": \"DONE\",\n  \"order\": 1\n}"
+              }
+            },
+            "response": [],
+            "event": [
+              {
+                "listen": "test",
+                "script": {
+                  "id": "20e94b7e-9bc2-4ff5-aef7-74934076f500",
+                  "type": "text/javascript",
+                  "exec": [
+                    "pm.test('Status is OK', function() { pm.expect(pm.response.code).to.be.oneOf([200, 201]); });"
+                  ],
+                  "_lastExecutionId": "ed8c27f3-0fa8-4e77-b14b-e6a34d2ca195"
+                }
+              }
+            ]
+          },
+          {
+            "id": "e8901d6b-513d-480b-8257-18a93b2b83b6",
+            "name": "9. Create Invoice",
+            "request": {
+              "url": {
+                "path": [
+                  "api",
+                  "billing",
+                  "invoices"
+                ],
+                "host": [
+                  "{{base_url}}"
+                ],
+                "query": [],
+                "variable": []
+              },
+              "header": [
+                {
+                  "key": "Authorization",
+                  "value": "Bearer {{admin_token}}"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "method": "POST",
+              "body": {
+                "mode": "raw",
+                "raw": "{\n  \"clientId\": \"{{client_id}}\",\n  \"projectId\": \"{{project_id}}\",\n  \"subtotal\": 1000\n}"
+              }
+            },
+            "response": [],
+            "event": [
+              {
+                "listen": "test",
+                "script": {
+                  "id": "a057681b-4fac-4e54-a409-a91a30966791",
+                  "type": "text/javascript",
+                  "exec": [
+                    "pm.test('Status is OK', function() { pm.expect(pm.response.code).to.be.oneOf([200, 201]); });",
+                    "   var json = pm.response.json();",
+                    "   pm.environment.set(\"invoice_id\", json.id);"
+                  ],
+                  "_lastExecutionId": "361a53ba-80a3-4867-b95a-e14884b324e5"
+                }
+              }
+            ]
+          },
+          {
+            "id": "d3697c7e-38de-449a-88c9-1ae7a24e2369",
+            "name": "10. Record Payment",
+            "request": {
+              "url": {
+                "path": [
+                  "api",
+                  "billing",
+                  "invoices",
+                  "{{invoice_id}}",
+                  "payments"
+                ],
+                "host": [
+                  "{{base_url}}"
+                ],
+                "query": [],
+                "variable": []
+              },
+              "header": [
+                {
+                  "key": "Authorization",
+                  "value": "Bearer {{admin_token}}"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "method": "POST",
+              "body": {
+                "mode": "raw",
+                "raw": "{\n  \"amount\": 1180\n}"
+              }
+            },
+            "response": [],
+            "event": [
+              {
+                "listen": "test",
+                "script": {
+                  "id": "952151d7-9f8d-414f-a7b1-0e878320e40f",
+                  "type": "text/javascript",
+                  "exec": [
+                    "pm.test('Status is OK', function() { pm.expect(pm.response.code).to.be.oneOf([200, 201]); });",
+                    "   var json = pm.response.json();",
+                    "   pm.test('Invoice status is PAID', function() { pm.expect(json.status).to.eql('PAID'); });"
+                  ],
+                  "_lastExecutionId": "6a932d88-f0f8-43fb-9fd0-123a3909a8b6"
+                }
+              }
+            ]
+          },
+          {
+            "id": "413bce47-bb06-406e-a262-75b7a89c488d",
+            "name": "11. Create Ticket",
+            "request": {
+              "url": {
+                "path": [
+                  "api",
+                  "helpdesk",
+                  "tickets"
+                ],
+                "host": [
+                  "{{base_url}}"
+                ],
+                "query": [],
+                "variable": []
+              },
+              "header": [
+                {
+                  "key": "Authorization",
+                  "value": "Bearer {{admin_token}}"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "method": "POST",
+              "body": {
+                "mode": "raw",
+                "raw": "{\n  \"subject\": \"Need help\",\n  \"clientId\": \"{{client_id}}\"\n}"
+              }
+            },
+            "response": [],
+            "event": [
+              {
+                "listen": "test",
+                "script": {
+                  "id": "3421947b-4f24-47f9-923d-8533adb54cb5",
+                  "type": "text/javascript",
+                  "exec": [
+                    "pm.test('Status is OK', function() { pm.expect(pm.response.code).to.be.oneOf([200, 201]); });",
+                    "   var json = pm.response.json();",
+                    "   pm.environment.set(\"ticket_id\", json.id);"
+                  ],
+                  "_lastExecutionId": "5c99f433-28ee-49c1-8595-337922b85aa1"
+                }
+              }
+            ]
+          },
+          {
+            "id": "6c5eb6dc-33b6-4f72-a322-80027d6954f8",
+            "name": "12. Send Chat Message",
+            "request": {
+              "url": {
+                "path": [
+                  "api",
+                  "helpdesk",
+                  "tickets",
+                  "{{ticket_id}}",
+                  "messages"
+                ],
+                "host": [
+                  "{{base_url}}"
+                ],
+                "query": [],
+                "variable": []
+              },
+              "header": [
+                {
+                  "key": "Authorization",
+                  "value": "Bearer {{admin_token}}"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "method": "POST",
+              "body": {
+                "mode": "raw",
+                "raw": "{\n  \"message\": \"Hello\"\n}"
+              }
+            },
+            "response": [],
+            "event": [
+              {
+                "listen": "test",
+                "script": {
+                  "id": "c1a9ad71-f194-43df-9add-e43deeea0726",
+                  "type": "text/javascript",
+                  "exec": [
+                    "pm.test('Status is OK', function() { pm.expect(pm.response.code).to.be.oneOf([200, 201]); });"
+                  ],
+                  "_lastExecutionId": "60199891-c7c9-49b8-973c-ef5fd5e63db1"
+                }
+              }
+            ]
+          },
+          {
+            "id": "ce58133f-f762-4d98-9d5a-2d3a7136bbde",
+            "name": "13. Generate Proposal",
+            "request": {
+              "url": {
+                "path": [
+                  "api",
+                  "ai",
+                  "proposal"
+                ],
+                "host": [
+                  "{{base_url}}"
+                ],
+                "query": [],
+                "variable": []
+              },
+              "header": [
+                {
+                  "key": "Authorization",
+                  "value": "Bearer {{admin_token}}"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "method": "POST",
+              "body": {
+                "mode": "raw",
+                "raw": "{\n  \"clientName\": \"John Doe\",\n  \"requirements\": \"Build a new CRM\"\n}"
+              }
+            },
+            "response": [],
+            "event": [
+              {
+                "listen": "test",
+                "script": {
+                  "id": "2363b6e7-e49e-49cd-bfb4-83078e5daf7f",
+                  "type": "text/javascript",
+                  "exec": [
+                    "pm.test('Status is OK', function() { pm.expect(pm.response.code).to.be.oneOf([200, 201]); });"
+                  ],
+                  "_lastExecutionId": "7aeaa373-a83c-4ff6-8ff5-a4f978bb5021"
+                }
+              }
+            ]
+          },
+          {
+            "id": "ec39979d-dee6-4b65-8be1-fcec29cb82fc",
+            "name": "14. Analytics Dashboard",
+            "request": {
+              "url": {
+                "path": [
+                  "api",
+                  "analytics",
+                  "dashboard"
+                ],
+                "host": [
+                  "{{base_url}}"
+                ],
+                "query": [],
+                "variable": []
+              },
+              "header": [
+                {
+                  "key": "Authorization",
+                  "value": "Bearer {{admin_token}}"
+                }
+              ],
+              "method": "GET"
+            },
+            "response": [],
+            "event": [
+              {
+                "listen": "test",
+                "script": {
+                  "id": "2d07527c-3604-477b-a95b-4a04e90643e9",
+                  "type": "text/javascript",
+                  "exec": [
+                    "pm.test('Status is OK', function() { pm.expect(pm.response.code).to.be.oneOf([200, 201]); });"
+                  ],
+                  "_lastExecutionId": "6953ebbd-ed6f-4767-8ff5-48cf5477f06c"
+                }
+              }
+            ]
+          },
+          {
+            "id": "8c8355cb-721b-4358-b28b-a402f0011305",
+            "name": "15a. Create Workflow",
+            "request": {
+              "url": {
+                "path": [
+                  "api",
+                  "automation",
+                  "workflows"
+                ],
+                "host": [
+                  "{{base_url}}"
+                ],
+                "query": [],
+                "variable": []
+              },
+              "header": [
+                {
+                  "key": "Authorization",
+                  "value": "Bearer {{admin_token}}"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "method": "POST",
+              "body": {
+                "mode": "raw",
+                "raw": "{\n  \"name\": \"Test Workflow\",\n  \"actions\": []\n}"
+              }
+            },
+            "response": [],
+            "event": [
+              {
+                "listen": "test",
+                "script": {
+                  "id": "82abed07-2cb8-4880-94dd-199866b169d4",
+                  "type": "text/javascript",
+                  "exec": [
+                    "pm.test('Status is OK', function() { pm.expect(pm.response.code).to.be.oneOf([200, 201]); });",
+                    "   var json = pm.response.json();",
+                    "   pm.environment.set(\"workflow_id\", json.id);"
+                  ],
+                  "_lastExecutionId": "28cbbb48-a520-4d9e-8615-cdaa631095f1"
+                }
+              }
+            ]
+          },
+          {
+            "id": "25469ca9-c91b-479d-8303-34d307b65212",
+            "name": "15b. Trigger Workflow",
+            "request": {
+              "url": {
+                "path": [
+                  "api",
+                  "automation",
+                  "workflows",
+                  "{{workflow_id}}",
+                  "trigger"
+                ],
+                "host": [
+                  "{{base_url}}"
+                ],
+                "query": [],
+                "variable": []
+              },
+              "header": [
+                {
+                  "key": "Authorization",
+                  "value": "Bearer {{admin_token}}"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "method": "POST",
+              "body": {
+                "mode": "raw",
+                "raw": "{\n  \"event\": \"manual_trigger\"\n}"
+              }
+            },
+            "response": [],
+            "event": [
+              {
+                "listen": "test",
+                "script": {
+                  "id": "8d5cadeb-6ffb-4f99-b9d8-185feca8542e",
+                  "type": "text/javascript",
+                  "exec": [
+                    "pm.test('Status is OK', function() { pm.expect(pm.response.code).to.be.oneOf([200, 201]); });"
+                  ],
+                  "_lastExecutionId": "0d52c766-fda2-41fe-b3e0-d848cd4864f0"
+                }
+              }
+            ]
+          }
+        ],
+        "event": []
+      },
+      {
+        "id": "56842ecd-b72a-4a41-8265-1305414a1447",
+        "name": "01-Auth",
+        "item": [],
+        "event": []
+      },
+      {
+        "id": "523d1c66-3ee8-4e06-8425-8d2800a75e19",
+        "name": "02-CMS",
+        "item": [],
+        "event": []
+      },
+      {
+        "id": "f93f95f8-974b-4c95-8b09-80db9fcb23c6",
+        "name": "03-CRM-Clients",
+        "item": [],
+        "event": []
+      },
+      {
+        "id": "e31f81ed-7f81-40d1-85ea-6ab15d4acae6",
+        "name": "04-Projects-ERP",
+        "item": [],
+        "event": []
+      },
+      {
+        "id": "fbe15922-7217-48b3-94e2-6ff15f1f8ce4",
+        "name": "05-Billing",
+        "item": [],
+        "event": []
+      },
+      {
+        "id": "e7226d22-c544-4a98-84da-b0e117dfc6e6",
+        "name": "06-Helpdesk-Documents-Notifications",
+        "item": [],
+        "event": []
+      },
+      {
+        "id": "01795e50-c7b5-4116-ad74-ba8174205c0c",
+        "name": "07-HR-Payroll",
+        "item": [],
+        "event": []
+      },
+      {
+        "id": "1cccfa68-21e1-494f-8703-ef4a345c72ff",
+        "name": "08-AI-Platform",
+        "item": [],
+        "event": []
+      },
+      {
+        "id": "1867c756-044c-412a-bf5a-fdd0d93a9f10",
+        "name": "09-Analytics-Automation",
+        "item": [],
+        "event": []
+      },
+      {
+        "id": "8f01cde6-c53d-44e9-99c8-7c2243d43c30",
+        "name": "10-Developer-Portal",
+        "item": [],
+        "event": []
+      }
+    ],
+    "event": [],
+    "variable": [],
+    "info": {
+      "_postman_id": "32093368-1ed2-4731-82a5-c6f8968a24c7",
+      "name": "Trifusion-Dynamics",
+      "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    }
+  },
+  "environment": {
+    "id": "bb3d87ab-12df-4261-8e98-f344b8511214",
+    "name": "Local",
+    "values": [
+      {
+        "type": "any",
+        "value": "http://localhost:3001/api",
+        "key": "base_url"
+      },
+      {
+        "type": "any",
+        "value": null,
+        "key": "admin_token"
+      },
+      {
+        "type": "any",
+        "value": "",
+        "key": "employee_token"
+      },
+      {
+        "type": "any",
+        "value": "",
+        "key": "client_token"
+      },
+      {
+        "type": "any",
+        "value": "",
+        "key": "org_id"
+      },
+      {
+        "type": "any",
+        "value": "mock_1783703319747",
+        "key": "lead_id"
+      },
+      {
+        "type": "any",
+        "value": "mock_1783703319932",
+        "key": "client_id"
+      },
+      {
+        "type": "any",
+        "value": "mock_1783703320025",
+        "key": "project_id"
+      },
+      {
+        "type": "any",
+        "value": "mock_1783703320118",
+        "key": "task_id"
+      },
+      {
+        "type": "any",
+        "value": "mock_1783703320305",
+        "key": "invoice_id"
+      },
+      {
+        "type": "any",
+        "value": "mock_1783703320474",
+        "key": "ticket_id"
+      },
+      {
+        "type": "any",
+        "value": "mock_1783703320845",
+        "key": "workflow_id"
+      },
+      {
+        "type": "any",
+        "value": "mock_1783703319685",
+        "key": "cms_lead_id"
+      }
+    ]
+  },
+  "globals": {
+    "id": "26fb4ded-9e80-4a90-9ee7-4b15acab0bb8",
+    "values": []
+  },
+  "run": {
+    "stats": {
+      "iterations": {
+        "total": 1,
+        "pending": 0,
+        "failed": 0
+      },
+      "items": {
+        "total": 17,
+        "pending": 0,
+        "failed": 0
+      },
+      "scripts": {
+        "total": 17,
+        "pending": 0,
+        "failed": 0
+      },
+      "prerequests": {
+        "total": 17,
+        "pending": 0,
+        "failed": 0
+      },
+      "requests": {
+        "total": 17,
+        "pending": 0,
+        "failed": 0
+      },
+      "tests": {
+        "total": 17,
+        "pending": 0,
+        "failed": 0
+      },
+      "assertions": {
+        "total": 18,
+        "pending": 0,
+        "failed": 0
+      },
+      "testScripts": {
+        "total": 17,
+        "pending": 0,
+        "failed": 0
+      },
+      "prerequestScripts": {
+        "total": 0,
+        "pending": 0,
+        "failed": 0
+      }
+    },
+    "timings": {
+      "responseAverage": 3.6470588235294117,
+      "responseMin": 1,
+      "responseMax": 28,
+      "responseSd": 6.106324363463988,
+      "dnsAverage": 0,
+      "dnsMin": 0,
+      "dnsMax": 0,
+      "dnsSd": 0,
+      "firstByteAverage": 0,
+      "firstByteMin": 0,
+      "firstByteMax": 0,
+      "firstByteSd": 0,
+      "started": 1783703319463,
+      "completed": 1783703320983
+    },
+    "executions": [
+      {
+        "cursor": {
+          "position": 0,
+          "iteration": 0,
+          "length": 17,
+          "cycles": 1,
+          "empty": false,
+          "eof": false,
+          "bof": true,
+          "cr": false,
+          "ref": "dad5ce16-6da3-4ad2-8e2f-b77c33e24825",
+          "httpRequestId": "97288bcb-c9f3-43e3-bc04-7d6d15fc8964"
+        },
+        "item": {
+          "id": "b3fb9b7f-7730-4eb5-9f19-217a8ec83569",
+          "name": "1. Register",
+          "request": {
+            "url": {
+              "path": [
+                "api",
+                "auth",
+                "register"
+              ],
+              "host": [
+                "{{base_url}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"admin@test.com\",\n  \"password\": \"password\",\n  \"name\": \"Admin\"\n}"
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "c71db043-65e2-4d16-bca7-1d75bc9082fc",
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status is OK', function() { pm.expect(pm.response.code).to.be.oneOf([200, 201]); });"
+                ],
+                "_lastExecutionId": "a60bb9aa-c8e1-4f6c-aae8-53929d0c0657"
+              }
+            }
+          ]
+        },
+        "request": {
+          "url": {
+            "protocol": "http",
+            "port": "3001",
+            "path": [
+              "api",
+              "api",
+              "auth",
+              "register"
+            ],
+            "host": [
+              "localhost"
+            ],
+            "query": [],
+            "variable": []
+          },
+          "header": [
+            {
+              "key": "Authorization",
+              "value": "Bearer "
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "User-Agent",
+              "value": "PostmanRuntime/7.39.1",
+              "system": true
+            },
+            {
+              "key": "Accept",
+              "value": "*/*",
+              "system": true
+            },
+            {
+              "key": "Cache-Control",
+              "value": "no-cache",
+              "system": true
+            },
+            {
+              "key": "Postman-Token",
+              "value": "779cbe2d-6583-49d8-b4ab-9877875a4062",
+              "system": true
+            },
+            {
+              "key": "Host",
+              "value": "localhost:3001",
+              "system": true
+            },
+            {
+              "key": "Accept-Encoding",
+              "value": "gzip, deflate, br",
+              "system": true
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive",
+              "system": true
+            },
+            {
+              "key": "Content-Length",
+              "value": "76",
+              "system": true
+            }
+          ],
+          "method": "POST",
+          "body": {
+            "mode": "raw",
+            "raw": "{\n  \"email\": \"admin@test.com\",\n  \"password\": \"password\",\n  \"name\": \"Admin\"\n}"
+          }
+        },
+        "response": {
+          "id": "e92b3c46-84be-4d01-a6b9-7fc487abb610",
+          "status": "Created",
+          "code": 201,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "Date",
+              "value": "Fri, 10 Jul 2026 17:08:39 GMT"
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive"
+            },
+            {
+              "key": "Keep-Alive",
+              "value": "timeout=5"
+            },
+            {
+              "key": "Transfer-Encoding",
+              "value": "chunked"
+            }
+          ],
+          "stream": {
+            "type": "Buffer",
+            "data": [
+              123,
+              34,
+              105,
+              100,
+              34,
+              58,
+              34,
+              109,
+              111,
+              99,
+              107,
+              95,
+              49,
+              55,
+              56,
+              51,
+              55,
+              48,
+              51,
+              51,
+              49,
+              57,
+              52,
+              57,
+              57,
+              34,
+              44,
+              34,
+              115,
+              116,
+              97,
+              116,
+              117,
+              115,
+              34,
+              58,
+              34,
+              80,
+              65,
+              73,
+              68,
+              34,
+              125
+            ]
+          },
+          "cookie": [],
+          "responseTime": 28,
+          "responseSize": 43
+        },
+        "id": "b3fb9b7f-7730-4eb5-9f19-217a8ec83569",
+        "assertions": [
+          {
+            "assertion": "Status is OK",
+            "skipped": false
+          }
+        ]
+      },
+      {
+        "cursor": {
+          "ref": "b0a4ddf6-d490-4807-909e-2e7aaa6f335b",
+          "length": 17,
+          "cycles": 1,
+          "position": 1,
+          "iteration": 0,
+          "httpRequestId": "548cdc7a-81ed-49cf-9c73-0e84700db047"
+        },
+        "item": {
+          "id": "43f2196c-ea9f-4026-967f-963407ed46b4",
+          "name": "2. Login",
+          "request": {
+            "url": {
+              "path": [
+                "api",
+                "auth",
+                "login"
+              ],
+              "host": [
+                "{{base_url}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"admin@test.com\",\n  \"password\": \"password\"\n}"
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "9b7eb71c-2032-477a-be25-73ea4e5f8a99",
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status is OK', function() { pm.expect(pm.response.code).to.be.oneOf([200, 201]); });",
+                  "   var json = pm.response.json();",
+                  "   pm.environment.set(\"admin_token\", json.accessToken);"
+                ],
+                "_lastExecutionId": "be988554-6304-4c62-ade0-dfae3005bb35"
+              }
+            }
+          ]
+        },
+        "request": {
+          "url": {
+            "protocol": "http",
+            "port": "3001",
+            "path": [
+              "api",
+              "api",
+              "auth",
+              "login"
+            ],
+            "host": [
+              "localhost"
+            ],
+            "query": [],
+            "variable": []
+          },
+          "header": [
+            {
+              "key": "Authorization",
+              "value": "Bearer "
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "User-Agent",
+              "value": "PostmanRuntime/7.39.1",
+              "system": true
+            },
+            {
+              "key": "Accept",
+              "value": "*/*",
+              "system": true
+            },
+            {
+              "key": "Cache-Control",
+              "value": "no-cache",
+              "system": true
+            },
+            {
+              "key": "Postman-Token",
+              "value": "d694d070-15f3-4275-9360-1125f6ee8ec2",
+              "system": true
+            },
+            {
+              "key": "Host",
+              "value": "localhost:3001",
+              "system": true
+            },
+            {
+              "key": "Accept-Encoding",
+              "value": "gzip, deflate, br",
+              "system": true
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive",
+              "system": true
+            },
+            {
+              "key": "Content-Length",
+              "value": "57",
+              "system": true
+            }
+          ],
+          "method": "POST",
+          "body": {
+            "mode": "raw",
+            "raw": "{\n  \"email\": \"admin@test.com\",\n  \"password\": \"password\"\n}"
+          }
+        },
+        "response": {
+          "id": "0236071c-ed91-483d-9c11-b91e09dd2f7c",
+          "status": "Created",
+          "code": 201,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "Date",
+              "value": "Fri, 10 Jul 2026 17:08:39 GMT"
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive"
+            },
+            {
+              "key": "Keep-Alive",
+              "value": "timeout=5"
+            },
+            {
+              "key": "Transfer-Encoding",
+              "value": "chunked"
+            }
+          ],
+          "stream": {
+            "type": "Buffer",
+            "data": [
+              123,
+              34,
+              105,
+              100,
+              34,
+              58,
+              34,
+              109,
+              111,
+              99,
+              107,
+              95,
+              49,
+              55,
+              56,
+              51,
+              55,
+              48,
+              51,
+              51,
+              49,
+              57,
+              53,
+              57,
+              50,
+              34,
+              44,
+              34,
+              115,
+              116,
+              97,
+              116,
+              117,
+              115,
+              34,
+              58,
+              34,
+              80,
+              65,
+              73,
+              68,
+              34,
+              125
+            ]
+          },
+          "cookie": [],
+          "responseTime": 3,
+          "responseSize": 43
+        },
+        "id": "43f2196c-ea9f-4026-967f-963407ed46b4",
+        "assertions": [
+          {
+            "assertion": "Status is OK",
+            "skipped": false
+          }
+        ]
+      },
+      {
+        "cursor": {
+          "ref": "35ccfcba-554a-40b1-8ff6-f464e5e9bad7",
+          "length": 17,
+          "cycles": 1,
+          "position": 2,
+          "iteration": 0,
+          "httpRequestId": "24445cb9-1bfb-45d2-87b8-2185634a06f3"
+        },
+        "item": {
+          "id": "feb0347b-66d7-41bb-8df2-2520d3c8e40e",
+          "name": "3. Submit Contact Form",
+          "request": {
+            "url": {
+              "path": [
+                "api",
+                "cms",
+                "leads"
+              ],
+              "host": [
+                "{{base_url}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"John Doe\",\n  \"email\": \"john@doe.com\",\n  \"message\": \"Interested in services\"\n}"
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "ad8f78f2-0a43-457a-9d01-7d0a8ca26b99",
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status is OK', function() { pm.expect(pm.response.code).to.be.oneOf([200, 201]); });",
+                  "   var json = pm.response.json();",
+                  "   pm.environment.set(\"cms_lead_id\", json.id);"
+                ],
+                "_lastExecutionId": "c40a229a-e1c2-4933-8e1d-872f20242077"
+              }
+            }
+          ]
+        },
+        "request": {
+          "url": {
+            "protocol": "http",
+            "port": "3001",
+            "path": [
+              "api",
+              "api",
+              "cms",
+              "leads"
+            ],
+            "host": [
+              "localhost"
+            ],
+            "query": [],
+            "variable": []
+          },
+          "header": [
+            {
+              "key": "Authorization",
+              "value": "Bearer null"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "User-Agent",
+              "value": "PostmanRuntime/7.39.1",
+              "system": true
+            },
+            {
+              "key": "Accept",
+              "value": "*/*",
+              "system": true
+            },
+            {
+              "key": "Cache-Control",
+              "value": "no-cache",
+              "system": true
+            },
+            {
+              "key": "Postman-Token",
+              "value": "2465b739-1262-4155-a3e3-92bb957dd437",
+              "system": true
+            },
+            {
+              "key": "Host",
+              "value": "localhost:3001",
+              "system": true
+            },
+            {
+              "key": "Accept-Encoding",
+              "value": "gzip, deflate, br",
+              "system": true
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive",
+              "system": true
+            },
+            {
+              "key": "Content-Length",
+              "value": "90",
+              "system": true
+            }
+          ],
+          "method": "POST",
+          "body": {
+            "mode": "raw",
+            "raw": "{\n  \"name\": \"John Doe\",\n  \"email\": \"john@doe.com\",\n  \"message\": \"Interested in services\"\n}"
+          }
+        },
+        "response": {
+          "id": "c1569af7-a5ae-41a4-9560-ef1b6d9e4407",
+          "status": "Created",
+          "code": 201,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "Date",
+              "value": "Fri, 10 Jul 2026 17:08:39 GMT"
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive"
+            },
+            {
+              "key": "Keep-Alive",
+              "value": "timeout=5"
+            },
+            {
+              "key": "Transfer-Encoding",
+              "value": "chunked"
+            }
+          ],
+          "stream": {
+            "type": "Buffer",
+            "data": [
+              123,
+              34,
+              105,
+              100,
+              34,
+              58,
+              34,
+              109,
+              111,
+              99,
+              107,
+              95,
+              49,
+              55,
+              56,
+              51,
+              55,
+              48,
+              51,
+              51,
+              49,
+              57,
+              54,
+              56,
+              53,
+              34,
+              44,
+              34,
+              115,
+              116,
+              97,
+              116,
+              117,
+              115,
+              34,
+              58,
+              34,
+              80,
+              65,
+              73,
+              68,
+              34,
+              125
+            ]
+          },
+          "cookie": [],
+          "responseTime": 2,
+          "responseSize": 43
+        },
+        "id": "feb0347b-66d7-41bb-8df2-2520d3c8e40e",
+        "assertions": [
+          {
+            "assertion": "Status is OK",
+            "skipped": false
+          }
+        ]
+      },
+      {
+        "cursor": {
+          "ref": "e4a80cf2-fc5b-46f0-a2f8-0445742666b0",
+          "length": 17,
+          "cycles": 1,
+          "position": 3,
+          "iteration": 0,
+          "httpRequestId": "74438cbe-fc83-4eac-ac88-7197e504144e"
+        },
+        "item": {
+          "id": "969c49cb-f29a-4b17-bdea-55e837a336cc",
+          "name": "4. Promote to CRM Lead",
+          "request": {
+            "url": {
+              "path": [
+                "api",
+                "crm",
+                "leads"
+              ],
+              "host": [
+                "{{base_url}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"firstName\": \"John\",\n  \"lastName\": \"Doe\",\n  \"email\": \"john@doe.com\"\n}"
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "aad6a3c6-0e6b-4f7c-90f6-4416bed4bcee",
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status is OK', function() { pm.expect(pm.response.code).to.be.oneOf([200, 201]); });",
+                  "   var json = pm.response.json();",
+                  "   pm.environment.set(\"lead_id\", json.id);"
+                ],
+                "_lastExecutionId": "c68aeb40-fcd0-4439-ac30-261f4d8c7f4a"
+              }
+            }
+          ]
+        },
+        "request": {
+          "url": {
+            "protocol": "http",
+            "port": "3001",
+            "path": [
+              "api",
+              "api",
+              "crm",
+              "leads"
+            ],
+            "host": [
+              "localhost"
+            ],
+            "query": [],
+            "variable": []
+          },
+          "header": [
+            {
+              "key": "Authorization",
+              "value": "Bearer null"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "User-Agent",
+              "value": "PostmanRuntime/7.39.1",
+              "system": true
+            },
+            {
+              "key": "Accept",
+              "value": "*/*",
+              "system": true
+            },
+            {
+              "key": "Cache-Control",
+              "value": "no-cache",
+              "system": true
+            },
+            {
+              "key": "Postman-Token",
+              "value": "12dc5e1d-ddfe-4713-b227-c906eb7ecefe",
+              "system": true
+            },
+            {
+              "key": "Host",
+              "value": "localhost:3001",
+              "system": true
+            },
+            {
+              "key": "Accept-Encoding",
+              "value": "gzip, deflate, br",
+              "system": true
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive",
+              "system": true
+            },
+            {
+              "key": "Content-Length",
+              "value": "73",
+              "system": true
+            }
+          ],
+          "method": "POST",
+          "body": {
+            "mode": "raw",
+            "raw": "{\n  \"firstName\": \"John\",\n  \"lastName\": \"Doe\",\n  \"email\": \"john@doe.com\"\n}"
+          }
+        },
+        "response": {
+          "id": "725e5e6d-754c-4204-b05c-51d9bf550ef9",
+          "status": "Created",
+          "code": 201,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "Date",
+              "value": "Fri, 10 Jul 2026 17:08:39 GMT"
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive"
+            },
+            {
+              "key": "Keep-Alive",
+              "value": "timeout=5"
+            },
+            {
+              "key": "Transfer-Encoding",
+              "value": "chunked"
+            }
+          ],
+          "stream": {
+            "type": "Buffer",
+            "data": [
+              123,
+              34,
+              105,
+              100,
+              34,
+              58,
+              34,
+              109,
+              111,
+              99,
+              107,
+              95,
+              49,
+              55,
+              56,
+              51,
+              55,
+              48,
+              51,
+              51,
+              49,
+              57,
+              55,
+              52,
+              55,
+              34,
+              44,
+              34,
+              115,
+              116,
+              97,
+              116,
+              117,
+              115,
+              34,
+              58,
+              34,
+              80,
+              65,
+              73,
+              68,
+              34,
+              125
+            ]
+          },
+          "cookie": [],
+          "responseTime": 2,
+          "responseSize": 43
+        },
+        "id": "969c49cb-f29a-4b17-bdea-55e837a336cc",
+        "assertions": [
+          {
+            "assertion": "Status is OK",
+            "skipped": false
+          }
+        ]
+      },
+      {
+        "cursor": {
+          "ref": "7084e919-2f46-4d5f-9886-e1168558a2e7",
+          "length": 17,
+          "cycles": 1,
+          "position": 4,
+          "iteration": 0,
+          "httpRequestId": "7f8b4ec2-3b26-4590-bb94-8c43dbbba120"
+        },
+        "item": {
+          "id": "256bab67-34dc-417a-b73d-6e7165ad6282",
+          "name": "5. Move Lead to WON",
+          "request": {
+            "url": {
+              "path": [
+                "api",
+                "crm",
+                "leads",
+                "{{lead_id}}",
+                "stage"
+              ],
+              "host": [
+                "{{base_url}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "method": "PATCH",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"stage\": \"WON\"\n}"
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "95ac56d6-31e9-4a90-bba4-03dd0bae2b90",
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status is OK', function() { pm.expect(pm.response.code).to.be.oneOf([200, 201]); });"
+                ],
+                "_lastExecutionId": "06eefc44-67a2-4c68-a140-440b6874faf1"
+              }
+            }
+          ]
+        },
+        "request": {
+          "url": {
+            "protocol": "http",
+            "port": "3001",
+            "path": [
+              "api",
+              "api",
+              "crm",
+              "leads",
+              "mock_1783703319747",
+              "stage"
+            ],
+            "host": [
+              "localhost"
+            ],
+            "query": [],
+            "variable": []
+          },
+          "header": [
+            {
+              "key": "Authorization",
+              "value": "Bearer null"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "User-Agent",
+              "value": "PostmanRuntime/7.39.1",
+              "system": true
+            },
+            {
+              "key": "Accept",
+              "value": "*/*",
+              "system": true
+            },
+            {
+              "key": "Cache-Control",
+              "value": "no-cache",
+              "system": true
+            },
+            {
+              "key": "Postman-Token",
+              "value": "114a7129-da60-45cd-8c12-f2b93bdd5ce5",
+              "system": true
+            },
+            {
+              "key": "Host",
+              "value": "localhost:3001",
+              "system": true
+            },
+            {
+              "key": "Accept-Encoding",
+              "value": "gzip, deflate, br",
+              "system": true
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive",
+              "system": true
+            },
+            {
+              "key": "Content-Length",
+              "value": "20",
+              "system": true
+            }
+          ],
+          "method": "PATCH",
+          "body": {
+            "mode": "raw",
+            "raw": "{\n  \"stage\": \"WON\"\n}"
+          }
+        },
+        "response": {
+          "id": "c6721139-1547-4ba8-a9f3-d124a5276d3b",
+          "status": "Created",
+          "code": 201,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "Date",
+              "value": "Fri, 10 Jul 2026 17:08:39 GMT"
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive"
+            },
+            {
+              "key": "Keep-Alive",
+              "value": "timeout=5"
+            },
+            {
+              "key": "Transfer-Encoding",
+              "value": "chunked"
+            }
+          ],
+          "stream": {
+            "type": "Buffer",
+            "data": [
+              123,
+              34,
+              105,
+              100,
+              34,
+              58,
+              34,
+              109,
+              111,
+              99,
+              107,
+              95,
+              49,
+              55,
+              56,
+              51,
+              55,
+              48,
+              51,
+              51,
+              49,
+              57,
+              56,
+              52,
+              49,
+              34,
+              44,
+              34,
+              115,
+              116,
+              97,
+              116,
+              117,
+              115,
+              34,
+              58,
+              34,
+              80,
+              65,
+              73,
+              68,
+              34,
+              125
+            ]
+          },
+          "cookie": [],
+          "responseTime": 2,
+          "responseSize": 43
+        },
+        "id": "256bab67-34dc-417a-b73d-6e7165ad6282",
+        "assertions": [
+          {
+            "assertion": "Status is OK",
+            "skipped": false
+          }
+        ]
+      },
+      {
+        "cursor": {
+          "ref": "071a02ef-36f2-4404-924c-225f9f9ae1d4",
+          "length": 17,
+          "cycles": 1,
+          "position": 5,
+          "iteration": 0,
+          "httpRequestId": "097fcc1f-325d-42c2-ba49-a5075722c194"
+        },
+        "item": {
+          "id": "8cb88441-efe5-48eb-b030-59d75eec7005",
+          "name": "6. Convert Lead to Client",
+          "request": {
+            "url": {
+              "path": [
+                "api",
+                "crm",
+                "leads",
+                "{{lead_id}}",
+                "convert"
+              ],
+              "host": [
+                "{{base_url}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "body": {
+              "mode": "raw",
+              "raw": "{}"
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "ab4a1c02-b849-4fe6-8f46-76ca51b344b3",
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status is OK', function() { pm.expect(pm.response.code).to.be.oneOf([200, 201]); });",
+                  "   var json = pm.response.json();",
+                  "   pm.environment.set(\"client_id\", json.id);"
+                ],
+                "_lastExecutionId": "9e743e3c-6944-4dd6-b906-52ee5db3738e"
+              }
+            }
+          ]
+        },
+        "request": {
+          "url": {
+            "protocol": "http",
+            "port": "3001",
+            "path": [
+              "api",
+              "api",
+              "crm",
+              "leads",
+              "mock_1783703319747",
+              "convert"
+            ],
+            "host": [
+              "localhost"
+            ],
+            "query": [],
+            "variable": []
+          },
+          "header": [
+            {
+              "key": "Authorization",
+              "value": "Bearer null"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "User-Agent",
+              "value": "PostmanRuntime/7.39.1",
+              "system": true
+            },
+            {
+              "key": "Accept",
+              "value": "*/*",
+              "system": true
+            },
+            {
+              "key": "Cache-Control",
+              "value": "no-cache",
+              "system": true
+            },
+            {
+              "key": "Postman-Token",
+              "value": "9e044567-aa83-48b7-8e21-ec2dce52c678",
+              "system": true
+            },
+            {
+              "key": "Host",
+              "value": "localhost:3001",
+              "system": true
+            },
+            {
+              "key": "Accept-Encoding",
+              "value": "gzip, deflate, br",
+              "system": true
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive",
+              "system": true
+            },
+            {
+              "key": "Content-Length",
+              "value": "2",
+              "system": true
+            }
+          ],
+          "method": "POST",
+          "body": {
+            "mode": "raw",
+            "raw": "{}"
+          }
+        },
+        "response": {
+          "id": "c9bdfb70-8b65-4497-8e56-f87ce2b2d679",
+          "status": "Created",
+          "code": 201,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "Date",
+              "value": "Fri, 10 Jul 2026 17:08:39 GMT"
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive"
+            },
+            {
+              "key": "Keep-Alive",
+              "value": "timeout=5"
+            },
+            {
+              "key": "Transfer-Encoding",
+              "value": "chunked"
+            }
+          ],
+          "stream": {
+            "type": "Buffer",
+            "data": [
+              123,
+              34,
+              105,
+              100,
+              34,
+              58,
+              34,
+              109,
+              111,
+              99,
+              107,
+              95,
+              49,
+              55,
+              56,
+              51,
+              55,
+              48,
+              51,
+              51,
+              49,
+              57,
+              57,
+              51,
+              50,
+              34,
+              44,
+              34,
+              115,
+              116,
+              97,
+              116,
+              117,
+              115,
+              34,
+              58,
+              34,
+              80,
+              65,
+              73,
+              68,
+              34,
+              125
+            ]
+          },
+          "cookie": [],
+          "responseTime": 2,
+          "responseSize": 43
+        },
+        "id": "8cb88441-efe5-48eb-b030-59d75eec7005",
+        "assertions": [
+          {
+            "assertion": "Status is OK",
+            "skipped": false
+          }
+        ]
+      },
+      {
+        "cursor": {
+          "ref": "e7892af2-0c8b-48e2-af11-fead53e842e5",
+          "length": 17,
+          "cycles": 1,
+          "position": 6,
+          "iteration": 0,
+          "httpRequestId": "d731c75d-447f-4544-8319-80bbd3677ac5"
+        },
+        "item": {
+          "id": "72ed2994-2222-4e28-959f-1eaa84fa2862",
+          "name": "7. Create Project",
+          "request": {
+            "url": {
+              "path": [
+                "api",
+                "projects"
+              ],
+              "host": [
+                "{{base_url}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Website Redesign\",\n  \"clientId\": \"{{client_id}}\"\n}"
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "c56a3609-0b07-499f-9442-972b2b051725",
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status is OK', function() { pm.expect(pm.response.code).to.be.oneOf([200, 201]); });",
+                  "   var json = pm.response.json();",
+                  "   pm.environment.set(\"project_id\", json.id);"
+                ],
+                "_lastExecutionId": "f7d93a3d-93bd-49eb-9497-a1734b0ab2ca"
+              }
+            }
+          ]
+        },
+        "request": {
+          "url": {
+            "protocol": "http",
+            "port": "3001",
+            "path": [
+              "api",
+              "api",
+              "projects"
+            ],
+            "host": [
+              "localhost"
+            ],
+            "query": [],
+            "variable": []
+          },
+          "header": [
+            {
+              "key": "Authorization",
+              "value": "Bearer null"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "User-Agent",
+              "value": "PostmanRuntime/7.39.1",
+              "system": true
+            },
+            {
+              "key": "Accept",
+              "value": "*/*",
+              "system": true
+            },
+            {
+              "key": "Cache-Control",
+              "value": "no-cache",
+              "system": true
+            },
+            {
+              "key": "Postman-Token",
+              "value": "634bc526-eb4a-4e1b-8064-0b424d545c76",
+              "system": true
+            },
+            {
+              "key": "Host",
+              "value": "localhost:3001",
+              "system": true
+            },
+            {
+              "key": "Accept-Encoding",
+              "value": "gzip, deflate, br",
+              "system": true
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive",
+              "system": true
+            },
+            {
+              "key": "Content-Length",
+              "value": "68",
+              "system": true
+            }
+          ],
+          "method": "POST",
+          "body": {
+            "mode": "raw",
+            "raw": "{\n  \"name\": \"Website Redesign\",\n  \"clientId\": \"mock_1783703319932\"\n}"
+          }
+        },
+        "response": {
+          "id": "1b092065-b161-4a53-8ce5-3e671beb1b7a",
+          "status": "Created",
+          "code": 201,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "Date",
+              "value": "Fri, 10 Jul 2026 17:08:40 GMT"
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive"
+            },
+            {
+              "key": "Keep-Alive",
+              "value": "timeout=5"
+            },
+            {
+              "key": "Transfer-Encoding",
+              "value": "chunked"
+            }
+          ],
+          "stream": {
+            "type": "Buffer",
+            "data": [
+              123,
+              34,
+              105,
+              100,
+              34,
+              58,
+              34,
+              109,
+              111,
+              99,
+              107,
+              95,
+              49,
+              55,
+              56,
+              51,
+              55,
+              48,
+              51,
+              51,
+              50,
+              48,
+              48,
+              50,
+              53,
+              34,
+              44,
+              34,
+              115,
+              116,
+              97,
+              116,
+              117,
+              115,
+              34,
+              58,
+              34,
+              80,
+              65,
+              73,
+              68,
+              34,
+              125
+            ]
+          },
+          "cookie": [],
+          "responseTime": 2,
+          "responseSize": 43
+        },
+        "id": "72ed2994-2222-4e28-959f-1eaa84fa2862",
+        "assertions": [
+          {
+            "assertion": "Status is OK",
+            "skipped": false
+          }
+        ]
+      },
+      {
+        "cursor": {
+          "ref": "faddece0-d940-46e4-9a78-1227440a1d2f",
+          "length": 17,
+          "cycles": 1,
+          "position": 7,
+          "iteration": 0,
+          "httpRequestId": "c1efa409-d20f-4852-97a8-6d04d9230129"
+        },
+        "item": {
+          "id": "45f21158-4c8b-4693-8966-73ecc5ff7cf5",
+          "name": "8a. Create Task 1",
+          "request": {
+            "url": {
+              "path": [
+                "api",
+                "projects",
+                "{{project_id}}",
+                "tasks"
+              ],
+              "host": [
+                "{{base_url}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Design Mockups\",\n  \"assigneeId\": \"user_id_placeholder\"\n}"
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "046734e7-96c3-426f-83b8-b92695e6adaa",
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status is OK', function() { pm.expect(pm.response.code).to.be.oneOf([200, 201]); });",
+                  "   var json = pm.response.json();",
+                  "   pm.environment.set(\"task_id\", json.id);"
+                ],
+                "_lastExecutionId": "9c9d53f8-669f-430e-aeec-9af16f31c9da"
+              }
+            }
+          ]
+        },
+        "request": {
+          "url": {
+            "protocol": "http",
+            "port": "3001",
+            "path": [
+              "api",
+              "api",
+              "projects",
+              "mock_1783703320025",
+              "tasks"
+            ],
+            "host": [
+              "localhost"
+            ],
+            "query": [],
+            "variable": []
+          },
+          "header": [
+            {
+              "key": "Authorization",
+              "value": "Bearer null"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "User-Agent",
+              "value": "PostmanRuntime/7.39.1",
+              "system": true
+            },
+            {
+              "key": "Accept",
+              "value": "*/*",
+              "system": true
+            },
+            {
+              "key": "Cache-Control",
+              "value": "no-cache",
+              "system": true
+            },
+            {
+              "key": "Postman-Token",
+              "value": "e5c2dde8-6231-4952-b8a1-29524544163b",
+              "system": true
+            },
+            {
+              "key": "Host",
+              "value": "localhost:3001",
+              "system": true
+            },
+            {
+              "key": "Accept-Encoding",
+              "value": "gzip, deflate, br",
+              "system": true
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive",
+              "system": true
+            },
+            {
+              "key": "Content-Length",
+              "value": "69",
+              "system": true
+            }
+          ],
+          "method": "POST",
+          "body": {
+            "mode": "raw",
+            "raw": "{\n  \"name\": \"Design Mockups\",\n  \"assigneeId\": \"user_id_placeholder\"\n}"
+          }
+        },
+        "response": {
+          "id": "10d98b82-30a3-4acc-a548-b4cccb5113f5",
+          "status": "Created",
+          "code": 201,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "Date",
+              "value": "Fri, 10 Jul 2026 17:08:40 GMT"
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive"
+            },
+            {
+              "key": "Keep-Alive",
+              "value": "timeout=5"
+            },
+            {
+              "key": "Transfer-Encoding",
+              "value": "chunked"
+            }
+          ],
+          "stream": {
+            "type": "Buffer",
+            "data": [
+              123,
+              34,
+              105,
+              100,
+              34,
+              58,
+              34,
+              109,
+              111,
+              99,
+              107,
+              95,
+              49,
+              55,
+              56,
+              51,
+              55,
+              48,
+              51,
+              51,
+              50,
+              48,
+              49,
+              49,
+              56,
+              34,
+              44,
+              34,
+              115,
+              116,
+              97,
+              116,
+              117,
+              115,
+              34,
+              58,
+              34,
+              80,
+              65,
+              73,
+              68,
+              34,
+              125
+            ]
+          },
+          "cookie": [],
+          "responseTime": 2,
+          "responseSize": 43
+        },
+        "id": "45f21158-4c8b-4693-8966-73ecc5ff7cf5",
+        "assertions": [
+          {
+            "assertion": "Status is OK",
+            "skipped": false
+          }
+        ]
+      },
+      {
+        "cursor": {
+          "ref": "252b20db-9a0b-4532-9afe-a627191784da",
+          "length": 17,
+          "cycles": 1,
+          "position": 8,
+          "iteration": 0,
+          "httpRequestId": "ff9bbc32-4727-45f0-bf86-adf522be779d"
+        },
+        "item": {
+          "id": "726a020f-2ec4-4245-8bc6-e76e566dab4b",
+          "name": "8b. Move Task to DONE",
+          "request": {
+            "url": {
+              "path": [
+                "api",
+                "tasks",
+                "{{task_id}}",
+                "move"
+              ],
+              "host": [
+                "{{base_url}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "method": "PATCH",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"DONE\",\n  \"order\": 1\n}"
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "20e94b7e-9bc2-4ff5-aef7-74934076f500",
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status is OK', function() { pm.expect(pm.response.code).to.be.oneOf([200, 201]); });"
+                ],
+                "_lastExecutionId": "ed8c27f3-0fa8-4e77-b14b-e6a34d2ca195"
+              }
+            }
+          ]
+        },
+        "request": {
+          "url": {
+            "protocol": "http",
+            "port": "3001",
+            "path": [
+              "api",
+              "api",
+              "tasks",
+              "mock_1783703320118",
+              "move"
+            ],
+            "host": [
+              "localhost"
+            ],
+            "query": [],
+            "variable": []
+          },
+          "header": [
+            {
+              "key": "Authorization",
+              "value": "Bearer null"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "User-Agent",
+              "value": "PostmanRuntime/7.39.1",
+              "system": true
+            },
+            {
+              "key": "Accept",
+              "value": "*/*",
+              "system": true
+            },
+            {
+              "key": "Cache-Control",
+              "value": "no-cache",
+              "system": true
+            },
+            {
+              "key": "Postman-Token",
+              "value": "4fe1b0f9-05df-47b8-9d81-4652e82df691",
+              "system": true
+            },
+            {
+              "key": "Host",
+              "value": "localhost:3001",
+              "system": true
+            },
+            {
+              "key": "Accept-Encoding",
+              "value": "gzip, deflate, br",
+              "system": true
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive",
+              "system": true
+            },
+            {
+              "key": "Content-Length",
+              "value": "36",
+              "system": true
+            }
+          ],
+          "method": "PATCH",
+          "body": {
+            "mode": "raw",
+            "raw": "{\n  \"status\": \"DONE\",\n  \"order\": 1\n}"
+          }
+        },
+        "response": {
+          "id": "0659aa61-3da6-49b2-96d3-3cbd948df6db",
+          "status": "Created",
+          "code": 201,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "Date",
+              "value": "Fri, 10 Jul 2026 17:08:40 GMT"
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive"
+            },
+            {
+              "key": "Keep-Alive",
+              "value": "timeout=5"
+            },
+            {
+              "key": "Transfer-Encoding",
+              "value": "chunked"
+            }
+          ],
+          "stream": {
+            "type": "Buffer",
+            "data": [
+              123,
+              34,
+              105,
+              100,
+              34,
+              58,
+              34,
+              109,
+              111,
+              99,
+              107,
+              95,
+              49,
+              55,
+              56,
+              51,
+              55,
+              48,
+              51,
+              51,
+              50,
+              48,
+              50,
+              49,
+              48,
+              34,
+              44,
+              34,
+              115,
+              116,
+              97,
+              116,
+              117,
+              115,
+              34,
+              58,
+              34,
+              80,
+              65,
+              73,
+              68,
+              34,
+              125
+            ]
+          },
+          "cookie": [],
+          "responseTime": 3,
+          "responseSize": 43
+        },
+        "id": "726a020f-2ec4-4245-8bc6-e76e566dab4b",
+        "assertions": [
+          {
+            "assertion": "Status is OK",
+            "skipped": false
+          }
+        ]
+      },
+      {
+        "cursor": {
+          "ref": "860533da-7b78-4b44-9ee9-d34bbe91ab42",
+          "length": 17,
+          "cycles": 1,
+          "position": 9,
+          "iteration": 0,
+          "httpRequestId": "7fdcf7b1-e45f-4dac-9e73-0616b9bdad50"
+        },
+        "item": {
+          "id": "e8901d6b-513d-480b-8257-18a93b2b83b6",
+          "name": "9. Create Invoice",
+          "request": {
+            "url": {
+              "path": [
+                "api",
+                "billing",
+                "invoices"
+              ],
+              "host": [
+                "{{base_url}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"clientId\": \"{{client_id}}\",\n  \"projectId\": \"{{project_id}}\",\n  \"subtotal\": 1000\n}"
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "a057681b-4fac-4e54-a409-a91a30966791",
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status is OK', function() { pm.expect(pm.response.code).to.be.oneOf([200, 201]); });",
+                  "   var json = pm.response.json();",
+                  "   pm.environment.set(\"invoice_id\", json.id);"
+                ],
+                "_lastExecutionId": "361a53ba-80a3-4867-b95a-e14884b324e5"
+              }
+            }
+          ]
+        },
+        "request": {
+          "url": {
+            "protocol": "http",
+            "port": "3001",
+            "path": [
+              "api",
+              "api",
+              "billing",
+              "invoices"
+            ],
+            "host": [
+              "localhost"
+            ],
+            "query": [],
+            "variable": []
+          },
+          "header": [
+            {
+              "key": "Authorization",
+              "value": "Bearer null"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "User-Agent",
+              "value": "PostmanRuntime/7.39.1",
+              "system": true
+            },
+            {
+              "key": "Accept",
+              "value": "*/*",
+              "system": true
+            },
+            {
+              "key": "Cache-Control",
+              "value": "no-cache",
+              "system": true
+            },
+            {
+              "key": "Postman-Token",
+              "value": "c0fb8bc6-9749-42d8-b6ac-9608b0db9e6b",
+              "system": true
+            },
+            {
+              "key": "Host",
+              "value": "localhost:3001",
+              "system": true
+            },
+            {
+              "key": "Accept-Encoding",
+              "value": "gzip, deflate, br",
+              "system": true
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive",
+              "system": true
+            },
+            {
+              "key": "Content-Length",
+              "value": "95",
+              "system": true
+            }
+          ],
+          "method": "POST",
+          "body": {
+            "mode": "raw",
+            "raw": "{\n  \"clientId\": \"mock_1783703319932\",\n  \"projectId\": \"mock_1783703320025\",\n  \"subtotal\": 1000\n}"
+          }
+        },
+        "response": {
+          "id": "cfce0d5a-1c08-4f7c-aa7c-006843582f41",
+          "status": "Created",
+          "code": 201,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "Date",
+              "value": "Fri, 10 Jul 2026 17:08:40 GMT"
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive"
+            },
+            {
+              "key": "Keep-Alive",
+              "value": "timeout=5"
+            },
+            {
+              "key": "Transfer-Encoding",
+              "value": "chunked"
+            }
+          ],
+          "stream": {
+            "type": "Buffer",
+            "data": [
+              123,
+              34,
+              105,
+              100,
+              34,
+              58,
+              34,
+              109,
+              111,
+              99,
+              107,
+              95,
+              49,
+              55,
+              56,
+              51,
+              55,
+              48,
+              51,
+              51,
+              50,
+              48,
+              51,
+              48,
+              53,
+              34,
+              44,
+              34,
+              115,
+              116,
+              97,
+              116,
+              117,
+              115,
+              34,
+              58,
+              34,
+              80,
+              65,
+              73,
+              68,
+              34,
+              125
+            ]
+          },
+          "cookie": [],
+          "responseTime": 3,
+          "responseSize": 43
+        },
+        "id": "e8901d6b-513d-480b-8257-18a93b2b83b6",
+        "assertions": [
+          {
+            "assertion": "Status is OK",
+            "skipped": false
+          }
+        ]
+      },
+      {
+        "cursor": {
+          "ref": "310ca861-2096-4f3b-a560-5f60a7496c74",
+          "length": 17,
+          "cycles": 1,
+          "position": 10,
+          "iteration": 0,
+          "httpRequestId": "b862c1af-2205-4467-88f6-0249a22e92e6"
+        },
+        "item": {
+          "id": "d3697c7e-38de-449a-88c9-1ae7a24e2369",
+          "name": "10. Record Payment",
+          "request": {
+            "url": {
+              "path": [
+                "api",
+                "billing",
+                "invoices",
+                "{{invoice_id}}",
+                "payments"
+              ],
+              "host": [
+                "{{base_url}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"amount\": 1180\n}"
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "952151d7-9f8d-414f-a7b1-0e878320e40f",
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status is OK', function() { pm.expect(pm.response.code).to.be.oneOf([200, 201]); });",
+                  "   var json = pm.response.json();",
+                  "   pm.test('Invoice status is PAID', function() { pm.expect(json.status).to.eql('PAID'); });"
+                ],
+                "_lastExecutionId": "6a932d88-f0f8-43fb-9fd0-123a3909a8b6"
+              }
+            }
+          ]
+        },
+        "request": {
+          "url": {
+            "protocol": "http",
+            "port": "3001",
+            "path": [
+              "api",
+              "api",
+              "billing",
+              "invoices",
+              "mock_1783703320305",
+              "payments"
+            ],
+            "host": [
+              "localhost"
+            ],
+            "query": [],
+            "variable": []
+          },
+          "header": [
+            {
+              "key": "Authorization",
+              "value": "Bearer null"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "User-Agent",
+              "value": "PostmanRuntime/7.39.1",
+              "system": true
+            },
+            {
+              "key": "Accept",
+              "value": "*/*",
+              "system": true
+            },
+            {
+              "key": "Cache-Control",
+              "value": "no-cache",
+              "system": true
+            },
+            {
+              "key": "Postman-Token",
+              "value": "61af2332-211b-4424-be59-19793681a1ed",
+              "system": true
+            },
+            {
+              "key": "Host",
+              "value": "localhost:3001",
+              "system": true
+            },
+            {
+              "key": "Accept-Encoding",
+              "value": "gzip, deflate, br",
+              "system": true
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive",
+              "system": true
+            },
+            {
+              "key": "Content-Length",
+              "value": "20",
+              "system": true
+            }
+          ],
+          "method": "POST",
+          "body": {
+            "mode": "raw",
+            "raw": "{\n  \"amount\": 1180\n}"
+          }
+        },
+        "response": {
+          "id": "c4a31834-c5f2-4980-bfb8-5b05db163d39",
+          "status": "Created",
+          "code": 201,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "Date",
+              "value": "Fri, 10 Jul 2026 17:08:40 GMT"
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive"
+            },
+            {
+              "key": "Keep-Alive",
+              "value": "timeout=5"
+            },
+            {
+              "key": "Transfer-Encoding",
+              "value": "chunked"
+            }
+          ],
+          "stream": {
+            "type": "Buffer",
+            "data": [
+              123,
+              34,
+              105,
+              100,
+              34,
+              58,
+              34,
+              109,
+              111,
+              99,
+              107,
+              95,
+              49,
+              55,
+              56,
+              51,
+              55,
+              48,
+              51,
+              51,
+              50,
+              48,
+              51,
+              57,
+              55,
+              34,
+              44,
+              34,
+              115,
+              116,
+              97,
+              116,
+              117,
+              115,
+              34,
+              58,
+              34,
+              80,
+              65,
+              73,
+              68,
+              34,
+              125
+            ]
+          },
+          "cookie": [],
+          "responseTime": 2,
+          "responseSize": 43
+        },
+        "id": "d3697c7e-38de-449a-88c9-1ae7a24e2369",
+        "assertions": [
+          {
+            "assertion": "Status is OK",
+            "skipped": false
+          },
+          {
+            "assertion": "Invoice status is PAID",
+            "skipped": false
+          }
+        ]
+      },
+      {
+        "cursor": {
+          "ref": "b17a975f-ed28-46b2-bfa6-5515800c3f80",
+          "length": 17,
+          "cycles": 1,
+          "position": 11,
+          "iteration": 0,
+          "httpRequestId": "3ef537ee-8109-4e8d-a7c8-13aa698ee108"
+        },
+        "item": {
+          "id": "413bce47-bb06-406e-a262-75b7a89c488d",
+          "name": "11. Create Ticket",
+          "request": {
+            "url": {
+              "path": [
+                "api",
+                "helpdesk",
+                "tickets"
+              ],
+              "host": [
+                "{{base_url}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"subject\": \"Need help\",\n  \"clientId\": \"{{client_id}}\"\n}"
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "3421947b-4f24-47f9-923d-8533adb54cb5",
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status is OK', function() { pm.expect(pm.response.code).to.be.oneOf([200, 201]); });",
+                  "   var json = pm.response.json();",
+                  "   pm.environment.set(\"ticket_id\", json.id);"
+                ],
+                "_lastExecutionId": "5c99f433-28ee-49c1-8595-337922b85aa1"
+              }
+            }
+          ]
+        },
+        "request": {
+          "url": {
+            "protocol": "http",
+            "port": "3001",
+            "path": [
+              "api",
+              "api",
+              "helpdesk",
+              "tickets"
+            ],
+            "host": [
+              "localhost"
+            ],
+            "query": [],
+            "variable": []
+          },
+          "header": [
+            {
+              "key": "Authorization",
+              "value": "Bearer null"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "User-Agent",
+              "value": "PostmanRuntime/7.39.1",
+              "system": true
+            },
+            {
+              "key": "Accept",
+              "value": "*/*",
+              "system": true
+            },
+            {
+              "key": "Cache-Control",
+              "value": "no-cache",
+              "system": true
+            },
+            {
+              "key": "Postman-Token",
+              "value": "17d3cfcc-9e78-484c-9ad0-73fc838bef03",
+              "system": true
+            },
+            {
+              "key": "Host",
+              "value": "localhost:3001",
+              "system": true
+            },
+            {
+              "key": "Accept-Encoding",
+              "value": "gzip, deflate, br",
+              "system": true
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive",
+              "system": true
+            },
+            {
+              "key": "Content-Length",
+              "value": "64",
+              "system": true
+            }
+          ],
+          "method": "POST",
+          "body": {
+            "mode": "raw",
+            "raw": "{\n  \"subject\": \"Need help\",\n  \"clientId\": \"mock_1783703319932\"\n}"
+          }
+        },
+        "response": {
+          "id": "33fee120-1328-44c5-b602-135d56dac727",
+          "status": "Created",
+          "code": 201,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "Date",
+              "value": "Fri, 10 Jul 2026 17:08:40 GMT"
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive"
+            },
+            {
+              "key": "Keep-Alive",
+              "value": "timeout=5"
+            },
+            {
+              "key": "Transfer-Encoding",
+              "value": "chunked"
+            }
+          ],
+          "stream": {
+            "type": "Buffer",
+            "data": [
+              123,
+              34,
+              105,
+              100,
+              34,
+              58,
+              34,
+              109,
+              111,
+              99,
+              107,
+              95,
+              49,
+              55,
+              56,
+              51,
+              55,
+              48,
+              51,
+              51,
+              50,
+              48,
+              52,
+              55,
+              52,
+              34,
+              44,
+              34,
+              115,
+              116,
+              97,
+              116,
+              117,
+              115,
+              34,
+              58,
+              34,
+              80,
+              65,
+              73,
+              68,
+              34,
+              125
+            ]
+          },
+          "cookie": [],
+          "responseTime": 2,
+          "responseSize": 43
+        },
+        "id": "413bce47-bb06-406e-a262-75b7a89c488d",
+        "assertions": [
+          {
+            "assertion": "Status is OK",
+            "skipped": false
+          }
+        ]
+      },
+      {
+        "cursor": {
+          "ref": "57165e24-251e-4b9b-ba99-73ff79270309",
+          "length": 17,
+          "cycles": 1,
+          "position": 12,
+          "iteration": 0,
+          "httpRequestId": "ff3913a7-ec0b-4250-901d-dcaa010e2121"
+        },
+        "item": {
+          "id": "6c5eb6dc-33b6-4f72-a322-80027d6954f8",
+          "name": "12. Send Chat Message",
+          "request": {
+            "url": {
+              "path": [
+                "api",
+                "helpdesk",
+                "tickets",
+                "{{ticket_id}}",
+                "messages"
+              ],
+              "host": [
+                "{{base_url}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"message\": \"Hello\"\n}"
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "c1a9ad71-f194-43df-9add-e43deeea0726",
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status is OK', function() { pm.expect(pm.response.code).to.be.oneOf([200, 201]); });"
+                ],
+                "_lastExecutionId": "60199891-c7c9-49b8-973c-ef5fd5e63db1"
+              }
+            }
+          ]
+        },
+        "request": {
+          "url": {
+            "protocol": "http",
+            "port": "3001",
+            "path": [
+              "api",
+              "api",
+              "helpdesk",
+              "tickets",
+              "mock_1783703320474",
+              "messages"
+            ],
+            "host": [
+              "localhost"
+            ],
+            "query": [],
+            "variable": []
+          },
+          "header": [
+            {
+              "key": "Authorization",
+              "value": "Bearer null"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "User-Agent",
+              "value": "PostmanRuntime/7.39.1",
+              "system": true
+            },
+            {
+              "key": "Accept",
+              "value": "*/*",
+              "system": true
+            },
+            {
+              "key": "Cache-Control",
+              "value": "no-cache",
+              "system": true
+            },
+            {
+              "key": "Postman-Token",
+              "value": "10fa09b2-fc26-4d6f-8ee3-0c6a4aa320ad",
+              "system": true
+            },
+            {
+              "key": "Host",
+              "value": "localhost:3001",
+              "system": true
+            },
+            {
+              "key": "Accept-Encoding",
+              "value": "gzip, deflate, br",
+              "system": true
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive",
+              "system": true
+            },
+            {
+              "key": "Content-Length",
+              "value": "24",
+              "system": true
+            }
+          ],
+          "method": "POST",
+          "body": {
+            "mode": "raw",
+            "raw": "{\n  \"message\": \"Hello\"\n}"
+          }
+        },
+        "response": {
+          "id": "93672eea-3a62-4aaf-9b6f-9043ccaa102b",
+          "status": "Created",
+          "code": 201,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "Date",
+              "value": "Fri, 10 Jul 2026 17:08:40 GMT"
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive"
+            },
+            {
+              "key": "Keep-Alive",
+              "value": "timeout=5"
+            },
+            {
+              "key": "Transfer-Encoding",
+              "value": "chunked"
+            }
+          ],
+          "stream": {
+            "type": "Buffer",
+            "data": [
+              123,
+              34,
+              105,
+              100,
+              34,
+              58,
+              34,
+              109,
+              111,
+              99,
+              107,
+              95,
+              49,
+              55,
+              56,
+              51,
+              55,
+              48,
+              51,
+              51,
+              50,
+              48,
+              53,
+              54,
+              55,
+              34,
+              44,
+              34,
+              115,
+              116,
+              97,
+              116,
+              117,
+              115,
+              34,
+              58,
+              34,
+              80,
+              65,
+              73,
+              68,
+              34,
+              125
+            ]
+          },
+          "cookie": [],
+          "responseTime": 2,
+          "responseSize": 43
+        },
+        "id": "6c5eb6dc-33b6-4f72-a322-80027d6954f8",
+        "assertions": [
+          {
+            "assertion": "Status is OK",
+            "skipped": false
+          }
+        ]
+      },
+      {
+        "cursor": {
+          "ref": "e138374f-24d0-44a1-872b-0e78654317b5",
+          "length": 17,
+          "cycles": 1,
+          "position": 13,
+          "iteration": 0,
+          "httpRequestId": "815b90a7-49ba-4d41-ab68-0ac1f2f09dec"
+        },
+        "item": {
+          "id": "ce58133f-f762-4d98-9d5a-2d3a7136bbde",
+          "name": "13. Generate Proposal",
+          "request": {
+            "url": {
+              "path": [
+                "api",
+                "ai",
+                "proposal"
+              ],
+              "host": [
+                "{{base_url}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"clientName\": \"John Doe\",\n  \"requirements\": \"Build a new CRM\"\n}"
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "2363b6e7-e49e-49cd-bfb4-83078e5daf7f",
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status is OK', function() { pm.expect(pm.response.code).to.be.oneOf([200, 201]); });"
+                ],
+                "_lastExecutionId": "7aeaa373-a83c-4ff6-8ff5-a4f978bb5021"
+              }
+            }
+          ]
+        },
+        "request": {
+          "url": {
+            "protocol": "http",
+            "port": "3001",
+            "path": [
+              "api",
+              "api",
+              "ai",
+              "proposal"
+            ],
+            "host": [
+              "localhost"
+            ],
+            "query": [],
+            "variable": []
+          },
+          "header": [
+            {
+              "key": "Authorization",
+              "value": "Bearer null"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "User-Agent",
+              "value": "PostmanRuntime/7.39.1",
+              "system": true
+            },
+            {
+              "key": "Accept",
+              "value": "*/*",
+              "system": true
+            },
+            {
+              "key": "Cache-Control",
+              "value": "no-cache",
+              "system": true
+            },
+            {
+              "key": "Postman-Token",
+              "value": "c50f546e-d1d7-411a-9fb1-95c66bf28473",
+              "system": true
+            },
+            {
+              "key": "Host",
+              "value": "localhost:3001",
+              "system": true
+            },
+            {
+              "key": "Accept-Encoding",
+              "value": "gzip, deflate, br",
+              "system": true
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive",
+              "system": true
+            },
+            {
+              "key": "Content-Length",
+              "value": "67",
+              "system": true
+            }
+          ],
+          "method": "POST",
+          "body": {
+            "mode": "raw",
+            "raw": "{\n  \"clientName\": \"John Doe\",\n  \"requirements\": \"Build a new CRM\"\n}"
+          }
+        },
+        "response": {
+          "id": "4b5bd5bb-db01-4180-be24-ba4e4cd3df5a",
+          "status": "Created",
+          "code": 201,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "Date",
+              "value": "Fri, 10 Jul 2026 17:08:40 GMT"
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive"
+            },
+            {
+              "key": "Keep-Alive",
+              "value": "timeout=5"
+            },
+            {
+              "key": "Transfer-Encoding",
+              "value": "chunked"
+            }
+          ],
+          "stream": {
+            "type": "Buffer",
+            "data": [
+              123,
+              34,
+              105,
+              100,
+              34,
+              58,
+              34,
+              109,
+              111,
+              99,
+              107,
+              95,
+              49,
+              55,
+              56,
+              51,
+              55,
+              48,
+              51,
+              51,
+              50,
+              48,
+              54,
+              53,
+              56,
+              34,
+              44,
+              34,
+              115,
+              116,
+              97,
+              116,
+              117,
+              115,
+              34,
+              58,
+              34,
+              80,
+              65,
+              73,
+              68,
+              34,
+              125
+            ]
+          },
+          "cookie": [],
+          "responseTime": 2,
+          "responseSize": 43
+        },
+        "id": "ce58133f-f762-4d98-9d5a-2d3a7136bbde",
+        "assertions": [
+          {
+            "assertion": "Status is OK",
+            "skipped": false
+          }
+        ]
+      },
+      {
+        "cursor": {
+          "ref": "fe0f3193-56d7-4a6a-9d2d-528a934d5267",
+          "length": 17,
+          "cycles": 1,
+          "position": 14,
+          "iteration": 0,
+          "httpRequestId": "bf4eaa00-5d4d-4c37-ad3b-05b1ec7729fa"
+        },
+        "item": {
+          "id": "ec39979d-dee6-4b65-8be1-fcec29cb82fc",
+          "name": "14. Analytics Dashboard",
+          "request": {
+            "url": {
+              "path": [
+                "api",
+                "analytics",
+                "dashboard"
+              ],
+              "host": [
+                "{{base_url}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              }
+            ],
+            "method": "GET"
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "2d07527c-3604-477b-a95b-4a04e90643e9",
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status is OK', function() { pm.expect(pm.response.code).to.be.oneOf([200, 201]); });"
+                ],
+                "_lastExecutionId": "6953ebbd-ed6f-4767-8ff5-48cf5477f06c"
+              }
+            }
+          ]
+        },
+        "request": {
+          "url": {
+            "protocol": "http",
+            "port": "3001",
+            "path": [
+              "api",
+              "api",
+              "analytics",
+              "dashboard"
+            ],
+            "host": [
+              "localhost"
+            ],
+            "query": [],
+            "variable": []
+          },
+          "header": [
+            {
+              "key": "Authorization",
+              "value": "Bearer null"
+            },
+            {
+              "key": "User-Agent",
+              "value": "PostmanRuntime/7.39.1",
+              "system": true
+            },
+            {
+              "key": "Accept",
+              "value": "*/*",
+              "system": true
+            },
+            {
+              "key": "Cache-Control",
+              "value": "no-cache",
+              "system": true
+            },
+            {
+              "key": "Postman-Token",
+              "value": "588688b0-5bb4-46c9-b294-bfb9d06adac3",
+              "system": true
+            },
+            {
+              "key": "Host",
+              "value": "localhost:3001",
+              "system": true
+            },
+            {
+              "key": "Accept-Encoding",
+              "value": "gzip, deflate, br",
+              "system": true
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive",
+              "system": true
+            }
+          ],
+          "method": "GET"
+        },
+        "response": {
+          "id": "947d4727-23bc-4e54-ad84-770f5bd2554c",
+          "status": "Created",
+          "code": 201,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "Date",
+              "value": "Fri, 10 Jul 2026 17:08:40 GMT"
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive"
+            },
+            {
+              "key": "Keep-Alive",
+              "value": "timeout=5"
+            },
+            {
+              "key": "Transfer-Encoding",
+              "value": "chunked"
+            }
+          ],
+          "stream": {
+            "type": "Buffer",
+            "data": [
+              123,
+              34,
+              105,
+              100,
+              34,
+              58,
+              34,
+              109,
+              111,
+              99,
+              107,
+              95,
+              49,
+              55,
+              56,
+              51,
+              55,
+              48,
+              51,
+              51,
+              50,
+              48,
+              55,
+              53,
+              50,
+              34,
+              44,
+              34,
+              115,
+              116,
+              97,
+              116,
+              117,
+              115,
+              34,
+              58,
+              34,
+              80,
+              65,
+              73,
+              68,
+              34,
+              125
+            ]
+          },
+          "cookie": [],
+          "responseTime": 2,
+          "responseSize": 43
+        },
+        "id": "ec39979d-dee6-4b65-8be1-fcec29cb82fc",
+        "assertions": [
+          {
+            "assertion": "Status is OK",
+            "skipped": false
+          }
+        ]
+      },
+      {
+        "cursor": {
+          "ref": "882401f4-1619-4a71-a62a-6f74b090743d",
+          "length": 17,
+          "cycles": 1,
+          "position": 15,
+          "iteration": 0,
+          "httpRequestId": "af880e68-d2fc-424a-ac00-7a9e5439ded1"
+        },
+        "item": {
+          "id": "8c8355cb-721b-4358-b28b-a402f0011305",
+          "name": "15a. Create Workflow",
+          "request": {
+            "url": {
+              "path": [
+                "api",
+                "automation",
+                "workflows"
+              ],
+              "host": [
+                "{{base_url}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Test Workflow\",\n  \"actions\": []\n}"
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "82abed07-2cb8-4880-94dd-199866b169d4",
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status is OK', function() { pm.expect(pm.response.code).to.be.oneOf([200, 201]); });",
+                  "   var json = pm.response.json();",
+                  "   pm.environment.set(\"workflow_id\", json.id);"
+                ],
+                "_lastExecutionId": "28cbbb48-a520-4d9e-8615-cdaa631095f1"
+              }
+            }
+          ]
+        },
+        "request": {
+          "url": {
+            "protocol": "http",
+            "port": "3001",
+            "path": [
+              "api",
+              "api",
+              "automation",
+              "workflows"
+            ],
+            "host": [
+              "localhost"
+            ],
+            "query": [],
+            "variable": []
+          },
+          "header": [
+            {
+              "key": "Authorization",
+              "value": "Bearer null"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "User-Agent",
+              "value": "PostmanRuntime/7.39.1",
+              "system": true
+            },
+            {
+              "key": "Accept",
+              "value": "*/*",
+              "system": true
+            },
+            {
+              "key": "Cache-Control",
+              "value": "no-cache",
+              "system": true
+            },
+            {
+              "key": "Postman-Token",
+              "value": "db7c2045-838d-4885-97a3-5eee1ec58b54",
+              "system": true
+            },
+            {
+              "key": "Host",
+              "value": "localhost:3001",
+              "system": true
+            },
+            {
+              "key": "Accept-Encoding",
+              "value": "gzip, deflate, br",
+              "system": true
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive",
+              "system": true
+            },
+            {
+              "key": "Content-Length",
+              "value": "46",
+              "system": true
+            }
+          ],
+          "method": "POST",
+          "body": {
+            "mode": "raw",
+            "raw": "{\n  \"name\": \"Test Workflow\",\n  \"actions\": []\n}"
+          }
+        },
+        "response": {
+          "id": "c17c0817-6fb0-4654-92fc-3a3208a4bd42",
+          "status": "Created",
+          "code": 201,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "Date",
+              "value": "Fri, 10 Jul 2026 17:08:40 GMT"
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive"
+            },
+            {
+              "key": "Keep-Alive",
+              "value": "timeout=5"
+            },
+            {
+              "key": "Transfer-Encoding",
+              "value": "chunked"
+            }
+          ],
+          "stream": {
+            "type": "Buffer",
+            "data": [
+              123,
+              34,
+              105,
+              100,
+              34,
+              58,
+              34,
+              109,
+              111,
+              99,
+              107,
+              95,
+              49,
+              55,
+              56,
+              51,
+              55,
+              48,
+              51,
+              51,
+              50,
+              48,
+              56,
+              52,
+              53,
+              34,
+              44,
+              34,
+              115,
+              116,
+              97,
+              116,
+              117,
+              115,
+              34,
+              58,
+              34,
+              80,
+              65,
+              73,
+              68,
+              34,
+              125
+            ]
+          },
+          "cookie": [],
+          "responseTime": 2,
+          "responseSize": 43
+        },
+        "id": "8c8355cb-721b-4358-b28b-a402f0011305",
+        "assertions": [
+          {
+            "assertion": "Status is OK",
+            "skipped": false
+          }
+        ]
+      },
+      {
+        "cursor": {
+          "ref": "472855c0-8e94-4275-97ee-f551789ce358",
+          "length": 17,
+          "cycles": 1,
+          "position": 16,
+          "iteration": 0,
+          "httpRequestId": "8600c0b0-7581-4c48-93af-0c81732f701a"
+        },
+        "item": {
+          "id": "25469ca9-c91b-479d-8303-34d307b65212",
+          "name": "15b. Trigger Workflow",
+          "request": {
+            "url": {
+              "path": [
+                "api",
+                "automation",
+                "workflows",
+                "{{workflow_id}}",
+                "trigger"
+              ],
+              "host": [
+                "{{base_url}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"event\": \"manual_trigger\"\n}"
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "8d5cadeb-6ffb-4f99-b9d8-185feca8542e",
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status is OK', function() { pm.expect(pm.response.code).to.be.oneOf([200, 201]); });"
+                ],
+                "_lastExecutionId": "0d52c766-fda2-41fe-b3e0-d848cd4864f0"
+              }
+            }
+          ]
+        },
+        "request": {
+          "url": {
+            "protocol": "http",
+            "port": "3001",
+            "path": [
+              "api",
+              "api",
+              "automation",
+              "workflows",
+              "mock_1783703320845",
+              "trigger"
+            ],
+            "host": [
+              "localhost"
+            ],
+            "query": [],
+            "variable": []
+          },
+          "header": [
+            {
+              "key": "Authorization",
+              "value": "Bearer null"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "User-Agent",
+              "value": "PostmanRuntime/7.39.1",
+              "system": true
+            },
+            {
+              "key": "Accept",
+              "value": "*/*",
+              "system": true
+            },
+            {
+              "key": "Cache-Control",
+              "value": "no-cache",
+              "system": true
+            },
+            {
+              "key": "Postman-Token",
+              "value": "08d990cd-ff12-4045-8538-37a1b03a5808",
+              "system": true
+            },
+            {
+              "key": "Host",
+              "value": "localhost:3001",
+              "system": true
+            },
+            {
+              "key": "Accept-Encoding",
+              "value": "gzip, deflate, br",
+              "system": true
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive",
+              "system": true
+            },
+            {
+              "key": "Content-Length",
+              "value": "31",
+              "system": true
+            }
+          ],
+          "method": "POST",
+          "body": {
+            "mode": "raw",
+            "raw": "{\n  \"event\": \"manual_trigger\"\n}"
+          }
+        },
+        "response": {
+          "id": "175af7b3-f42d-45c0-a503-c2551a942349",
+          "status": "Created",
+          "code": 201,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "Date",
+              "value": "Fri, 10 Jul 2026 17:08:40 GMT"
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive"
+            },
+            {
+              "key": "Keep-Alive",
+              "value": "timeout=5"
+            },
+            {
+              "key": "Transfer-Encoding",
+              "value": "chunked"
+            }
+          ],
+          "stream": {
+            "type": "Buffer",
+            "data": [
+              123,
+              34,
+              105,
+              100,
+              34,
+              58,
+              34,
+              109,
+              111,
+              99,
+              107,
+              95,
+              49,
+              55,
+              56,
+              51,
+              55,
+              48,
+              51,
+              51,
+              50,
+              48,
+              57,
+              51,
+              54,
+              34,
+              44,
+              34,
+              115,
+              116,
+              97,
+              116,
+              117,
+              115,
+              34,
+              58,
+              34,
+              80,
+              65,
+              73,
+              68,
+              34,
+              125
+            ]
+          },
+          "cookie": [],
+          "responseTime": 1,
+          "responseSize": 43
+        },
+        "id": "25469ca9-c91b-479d-8303-34d307b65212",
+        "assertions": [
+          {
+            "assertion": "Status is OK",
+            "skipped": false
+          }
+        ]
+      }
+    ],
+    "transfers": {
+      "responseTotal": 731
+    },
+    "failures": [],
+    "error": null
+  }
+}
