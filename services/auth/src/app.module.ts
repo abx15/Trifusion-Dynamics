@@ -14,25 +14,43 @@ import { EventEmitterModule } from '@nestjs/event-emitter';
 import { ScheduleModule } from '@nestjs/schedule';
 import { ThrottlerModule, ThrottlerGuard } from '@nestjs/throttler';
 import { APP_GUARD, APP_INTERCEPTOR, APP_FILTER } from '@nestjs/core';
+import { CacheModule } from '@nestjs/cache-manager';
+import * as redisStore from 'cache-manager-redis-store';
 import { ApiLoggingInterceptor } from './gateway/interceptors/api-logging.interceptor';
 import { AllExceptionsFilter } from './gateway/filters/http-exception.filter';
+import { LoggerModule } from 'nestjs-pino';
+import { randomUUID } from 'crypto';
 
 @Module({
   imports: [
+    LoggerModule.forRoot({
+      pinoHttp: {
+        genReqId: (req) => req.headers['x-request-id'] || randomUUID(),
+        transport: process.env.NODE_ENV !== 'production'
+          ? { target: 'pino-pretty', options: { singleLine: true } }
+          : undefined,
+      },
+    }),
     EventEmitterModule.forRoot(),
     ScheduleModule.forRoot(),
     ThrottlerModule.forRoot([{
       ttl: 60000,
       limit: 100, // Default 100 req / minute
     }]),
+    CacheModule.register({
+      isGlobal: true,
+      store: redisStore,
+      host: process.env.REDIS_HOST || 'localhost',
+      port: process.env.REDIS_PORT ? parseInt(process.env.REDIS_PORT) : 6379,
+    }),
     DatabaseModule,
-    // AuthModule,
+    AuthModule,
     ProjectsSubModule,
     HrModule,
     AiModule,
-    // AnalyticsModule,
-    // AutomationModule,
-    // DeveloperModule,
+    AnalyticsModule,
+    AutomationModule,
+    DeveloperModule,
     StubsModule,
   ],
   controllers: [AppController],

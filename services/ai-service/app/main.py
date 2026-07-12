@@ -3,6 +3,14 @@ from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
 from .config import settings
 from .routers import proposal_generator, seo_audit, email_writer, meeting_summary, chat
+import sentry_sdk
+import os
+
+sentry_sdk.init(
+    dsn=os.getenv("SENTRY_DSN", "https://placeholder@o0.ingest.sentry.io/0"),
+    traces_sample_rate=1.0,
+    profiles_sample_rate=1.0,
+)
 
 app = FastAPI(
     title="Trifusion-Dynamics AI Service",

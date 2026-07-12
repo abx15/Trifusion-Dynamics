@@ -35,6 +35,7 @@ model User {
   updatedAt      DateTime      @updatedAt
   linkedClientId String?       // for CLIENT role users only, references clients.Client.id
 
+  @@index([organizationId])
   @@schema("auth")
 }
 
@@ -105,6 +106,7 @@ model Client {
   createdAt      DateTime  @default(now())
   updatedAt      DateTime  @updatedAt
 
+  @@index([organizationId])
   @@schema("clients")
 }
 
@@ -149,6 +151,9 @@ model Lead {
   createdAt      DateTime   @default(now())
   updatedAt      DateTime   @updatedAt
 
+  @@index([organizationId])
+  @@index([stage])
+  @@index([assignedToId])
   @@schema("crm")
 }
 
@@ -202,6 +207,7 @@ model Quote {
   createdAt      DateTime  @default(now())
   updatedAt      DateTime  @updatedAt
 
+  @@index([organizationId])
   @@schema("crm")
 }
 
@@ -233,6 +239,7 @@ model Project {
   createdAt      DateTime      @default(now())
   updatedAt      DateTime      @updatedAt
 
+  @@index([organizationId])
   @@schema("projects")
 }
 
@@ -288,6 +295,10 @@ model Task {
   createdAt      DateTime   @default(now())
   updatedAt      DateTime   @updatedAt
 
+  @@index([status])
+  @@index([projectId])
+  @@index([assignedToId])
+  @@index([sprintId])
   @@schema("projects")
 }
 
@@ -357,6 +368,10 @@ model Invoice {
   createdAt      DateTime      @default(now())
   updatedAt      DateTime      @updatedAt
 
+  @@index([organizationId])
+  @@index([status])
+  @@index([clientId])
+  @@index([dueDate])
   @@schema("billing")
 }
 
@@ -410,6 +425,7 @@ model Estimate {
   convertedToInvoiceId String?  @unique
   createdAt      DateTime       @default(now())
 
+  @@index([organizationId])
   @@schema("billing")
 }
 
@@ -435,6 +451,7 @@ model Subscription {
   cancelledAt    DateTime?
   organizationId String
 
+  @@index([organizationId])
   @@schema("billing")
 }
 
@@ -464,6 +481,7 @@ model ExpenseRecord {
   organizationId String
   createdAt      DateTime @default(now())
 
+  @@index([organizationId])
   @@schema("billing")
 }
 
@@ -485,6 +503,9 @@ model Employee {
   createdAt      DateTime  @default(now())
   updatedAt      DateTime  @updatedAt
 
+  @@index([organizationId])
+  @@index([status])
+  @@index([department])
   @@schema("hr")
 }
 
@@ -561,6 +582,7 @@ model Recruitment {
   organizationId String
   createdAt      DateTime @default(now())
 
+  @@index([organizationId])
   @@schema("hr")
 }
 
@@ -638,6 +660,7 @@ model AiProposalRequest {
   organizationId String
   createdAt      DateTime @default(now())
 
+  @@index([organizationId])
   @@schema("ai")
 }
 
@@ -650,6 +673,7 @@ model AiSeoAudit {
   organizationId String
   createdAt      DateTime @default(now())
 
+  @@index([organizationId])
   @@schema("ai")
 }
 
@@ -663,6 +687,7 @@ model AiEmailDraft {
   organizationId String
   createdAt      DateTime @default(now())
 
+  @@index([organizationId])
   @@schema("ai")
 }
 
@@ -676,6 +701,7 @@ model AiMeetingSummary {
   organizationId String
   createdAt      DateTime @default(now())
 
+  @@index([organizationId])
   @@schema("ai")
 }
 
@@ -688,6 +714,7 @@ model AiKnowledgeEmbedding {
   organizationId String
   createdAt      DateTime               @default(now())
 
+  @@index([organizationId])
   @@schema("ai")
 }
 
@@ -704,6 +731,7 @@ model RevenueRollup {
   createdAt      DateTime @default(now())
 
   @@unique([organizationId, periodType, periodDate])
+  @@index([organizationId])
   @@schema("analytics")
 }
 
@@ -717,6 +745,7 @@ model ClientRollup {
   createdAt      DateTime @default(now())
 
   @@unique([organizationId, periodDate])
+  @@index([organizationId])
   @@schema("analytics")
 }
 
@@ -731,6 +760,7 @@ model TeamPerformanceRollup {
   createdAt      DateTime  @default(now())
 
   @@unique([employeeId, periodDate])
+  @@index([organizationId])
   @@schema("analytics")
 }
 
@@ -748,6 +778,7 @@ model Workflow {
   createdAt      DateTime  @default(now())
   updatedAt      DateTime  @updatedAt
 
+  @@index([organizationId])
   @@schema("automation")
 }
 
@@ -770,6 +801,7 @@ model WorkflowRun {
   startedAt  DateTime @default(now())
   finishedAt DateTime?
 
+  @@index([workflowId, startedAt])
   @@schema("automation")
 }
 
@@ -796,6 +828,7 @@ model ApiKey {
   expiresAt      DateTime?
   createdAt      DateTime @default(now())
 
+  @@index([organizationId])
   @@schema("developer")
 }
 
@@ -810,6 +843,7 @@ model ApiRequestLog {
   organizationId String
   createdAt    DateTime @default(now())
 
+  @@index([organizationId, createdAt])
   @@schema("developer")
 }
 
@@ -823,6 +857,7 @@ model Webhook {
   deliveries     WebhookDelivery[]
   createdAt      DateTime @default(now())
 
+  @@index([organizationId])
   @@schema("developer")
 }
 

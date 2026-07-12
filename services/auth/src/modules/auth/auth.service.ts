@@ -22,6 +22,7 @@ export class AuthService {
   }
 
   async login(dto: LoginDto, ipAddress?: string, userAgent?: string): Promise<AuthResponse> {
+    try {
     // 1. Find user with roles and permissions
     const user = await this.prisma.user.findUnique({
       where: { email: dto.email },
@@ -137,6 +138,10 @@ export class AuthService {
         updatedAt: user.updatedAt.toISOString(),
       },
     };
+    } catch (e) {
+      console.error('LOGIN ERROR:', e);
+      throw e;
+    }
   }
 
   async logout(refreshTokenString: string): Promise<{ success: boolean }> {

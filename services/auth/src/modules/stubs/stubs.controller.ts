@@ -1,4 +1,5 @@
-import { Controller, Post, Patch, Param, Body, UseGuards, Get } from '@nestjs/common';
+import { Controller, Post, Patch, Param, Body, UseGuards, Get, UseInterceptors } from '@nestjs/common';
+import { CacheInterceptor, CacheKey, CacheTTL } from '@nestjs/cache-manager';
 import { LeadsService } from './leads.service';
 import { InvoicesService } from './invoices.service';
 import { TasksService } from './tasks.service';
@@ -122,4 +123,33 @@ export class StubsController {
   createProject() {
     return { id: 'project_1' };
   }
+
+  @UseInterceptors(CacheInterceptor)
+  @CacheTTL(3600000)
+  @Get('cms/services')
+  getCmsServices() {
+    return [{ id: 'service_1', name: 'Web Dev' }];
+  }
+
+  @UseInterceptors(CacheInterceptor)
+  @CacheTTL(3600000)
+  @Get('cms/pages/:slug')
+  getCmsPage() {
+    return { id: 'page_1', title: 'Home' };
+  }
+
+  @UseInterceptors(CacheInterceptor)
+  @CacheTTL(3600000)
+  @Get('helpdesk/faq')
+  getFaq() {
+    return [{ id: 'faq_1', question: 'How?' }];
+  }
+
+  @UseInterceptors(CacheInterceptor)
+  @CacheTTL(30000)
+  @Get('crm/leads')
+  getLeads() {
+    return [{ id: 'lead_1', name: 'John Doe' }];
+  }
+
 }

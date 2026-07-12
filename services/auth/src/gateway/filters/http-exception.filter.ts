@@ -15,6 +15,9 @@ export class AllExceptionsFilter implements ExceptionFilter {
       const res = exception.getResponse() as any;
       message = typeof res === 'string' ? res : (res.message || res.error || message);
     } else if (exception instanceof Error) {
+      import('@sentry/node').then(Sentry => {
+        Sentry.captureException(exception);
+      });
       // Don't leak raw stack traces in production
       message = process.env.NODE_ENV === 'production' 
         ? 'Internal server error' 
