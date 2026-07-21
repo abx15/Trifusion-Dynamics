@@ -40,6 +40,17 @@ export class EmployeesController {
     return this.employeesService.findAll(orgId, department, status);
   }
 
+  @Get("me")
+  async findMe(@CurrentUser() user: JwtPayload) {
+    return this.employeesService.findByUserId(user.sub, user.orgId);
+  }
+
+  @Get("users")
+  @RequirePermission("hr:write")
+  async findUsersToLink(@CurrentUser("orgId") orgId: string) {
+    return this.employeesService.findUsersToLink(orgId);
+  }
+
   @Get(':id')
   async findOne(
     @Param('id') id: string,

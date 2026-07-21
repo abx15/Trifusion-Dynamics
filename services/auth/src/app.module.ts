@@ -5,6 +5,7 @@ import { DatabaseModule } from './modules/database/database.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { ProjectsSubModule } from './modules/projects/projects/projects.module';
 import { HrModule } from './modules/hr/hr.module';
+import { PayrollModule } from './modules/payroll/payroll.module';
 import { AiModule } from './modules/ai/ai.module';
 import { AnalyticsModule } from './modules/analytics/analytics.module';
 import { AutomationModule } from './modules/automation/automation.module';
@@ -47,6 +48,7 @@ import { randomUUID } from 'crypto';
     AuthModule,
     ProjectsSubModule,
     HrModule,
+    PayrollModule,
     AiModule,
     AnalyticsModule,
     AutomationModule,

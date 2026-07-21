@@ -1,6 +1,8 @@
 # Stage 1: Build
 FROM node:20-bookworm-slim AS builder
 
+RUN apt-get update -y && apt-get install -y openssl ca-certificates && rm -rf /var/lib/apt/lists/*
+
 WORKDIR /app
 # Copy root workspace configurations
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
@@ -21,6 +23,8 @@ RUN pnpm --filter auth build
 
 # Stage 2: Production
 FROM node:20-bookworm-slim
+
+RUN apt-get update -y && apt-get install -y openssl ca-certificates && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
 ENV NODE_ENV=production
