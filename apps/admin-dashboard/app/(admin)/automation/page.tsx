@@ -1,121 +1,128 @@
-'use client';
+"use client";
 
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import Link from 'next/link';
+import * as React from "react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { PageHeader } from "@/components/layout/PageHeader";
+import { DataTable } from "@/components/shared/DataTable";
+import { useWorkflows, useToggleWorkflow, type Workflow } from "@/lib/hooks/useAutomation";
+import { toast } from "@/lib/toast";
+import { Button } from "@/components/ui/button";
+import { Plus, ToggleLeft, ToggleRight, Play, Cpu } from "lucide-react";
 
-export default function AutomationDashboard() {
-  const queryClient = useQueryClient();
+export default function WorkflowsListPage() {
+  const router = useRouter();
+  const { data: workflows = [], isLoading, refetch } = useWorkflows();
+  const toggleWorkflow = useToggleWorkflow();
 
-  const { data: workflows, isLoading } = useQuery({
-    queryKey: ['workflows'],
-    queryFn: async () => {
-      const res = await fetch('/api/automation/workflows');
-      if (!res.ok) throw new Error('Failed to fetch workflows');
-      return res.json();
+  const handleToggle = (e: React.MouseEvent, wf: Workflow) => {
+    e.stopPropagation(); // Avoid row click navigation trigger
+    toggleWorkflow.mutate(
+      { id: wf.id, isActive: !wf.isActive },
+      {
+        onSuccess: (data) => {
+          toast.success(`Workflow "${data.name}" is now ${data.isActive ? "Active" : "Inactive"}`);
+        },
+        onError: () => {
+          toast.error("Failed to toggle workflow status.");
+        },
+      }
+    );
+  };
+
+  const columns = [
+    {
+      key: "name",
+      header: "Name",
+      render: (row: Workflow) => (
+        <div>
+          <p className="font-bold text-foreground text-sm">{row.name}</p>
+          <p className="text-xs text-muted-foreground line-clamp-1">{row.description || "No description provided."}</p>
+        </div>
+      ),
     },
-  });
-
-  const toggleMutation = useMutation({
-    mutationFn: async (id: string) => {
-      const res = await fetch(`/api/automation/workflows/${id}/toggle`, { method: 'PATCH' });
-      if (!res.ok) throw new Error('Failed to toggle workflow');
-      return res.json();
+    {
+      key: "triggerType",
+      header: "Trigger",
+      render: (row: Workflow) => (
+        <span className="text-xs font-mono font-semibold bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded text-foreground">
+          {row.triggerType}
+        </span>
+      ),
     },
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['workflows'] }),
-  });
-
-  const triggerMutation = useMutation({
-    mutationFn: async (id: string) => {
-      const res = await fetch(`/api/automation/workflows/${id}/trigger`, { method: 'POST' });
-      if (!res.ok) throw new Error('Failed to trigger workflow');
-      return res.json();
+    {
+      key: "triggerConfig",
+      header: "Trigger Details",
+      render: (row: Workflow) => {
+        if (row.triggerType === "CRON") {
+          return <span className="font-mono text-xs text-muted-foreground">Cron: {row.triggerConfig?.expression || "—"}</span>;
+        }
+        if (row.triggerType === "WEBHOOK") {
+          return <span className="font-mono text-xs text-muted-foreground">Endpoint: /webhook/...</span>;
+        }
+        return <span className="text-xs text-muted-foreground">Event: {row.triggerConfig?.event || "—"}</span>;
+      },
     },
-    onSuccess: () => {
-      alert('Workflow triggered successfully');
-      queryClient.invalidateQueries({ queryKey: ['workflows'] });
+    {
+      key: "stepsCount",
+      header: "Steps",
+      render: (row: Workflow) => (
+        <span className="text-xs font-semibold text-foreground">
+          {row.steps?.length || 0} steps
+        </span>
+      ),
     },
-  });
-
-  if (isLoading) return <div className="p-6 text-white">Loading workflows...</div>;
+    {
+      key: "createdAt",
+      header: "Created On",
+      render: (row: Workflow) => (
+        <span className="text-xs text-muted-foreground">
+          {new Date(row.createdAt).toLocaleDateString()}
+        </span>
+      ),
+    },
+    {
+      key: "isActive",
+      header: "Active",
+      className: "text-center",
+      render: (row: Workflow) => (
+        <button
+          onClick={(e) => handleToggle(e, row)}
+          disabled={toggleWorkflow.isPending}
+          className="text-primary hover:scale-105 transition-transform cursor-pointer disabled:opacity-50"
+        >
+          {row.isActive ? (
+            <ToggleRight className="h-7 w-7 text-emerald-500" />
+          ) : (
+            <ToggleLeft className="h-7 w-7 text-slate-400" />
+          )}
+        </button>
+      ),
+    },
+  ];
 
   return (
-    <div className="p-6 max-w-7xl mx-auto space-y-6">
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold text-white">Automation Engine</h1>
-        <Link
-          href="/automation/new"
-          className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md font-medium transition-colors"
-        >
-          + New Workflow
+    <div className="space-y-6">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <PageHeader
+          title="Workflow Automations"
+          breadcrumbs={[{ label: "Technical Assets" }, { label: "Automations" }]}
+        />
+        <Link href="/automation/new" passHref legacyBehavior>
+          <Button size="sm" className="gap-2">
+            <Plus className="h-4 w-4" />
+            Build Workflow
+          </Button>
         </Link>
       </div>
 
-      <div className="bg-gray-800 rounded-lg border border-gray-700 overflow-hidden">
-        <table className="w-full text-left">
-          <thead className="bg-gray-900 border-b border-gray-700">
-            <tr>
-              <th className="p-4 text-gray-300 font-medium">Name</th>
-              <th className="p-4 text-gray-300 font-medium">Trigger</th>
-              <th className="p-4 text-gray-300 font-medium">Status</th>
-              <th className="p-4 text-gray-300 font-medium">Last Run</th>
-              <th className="p-4 text-gray-300 font-medium text-right">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {workflows?.map((wf: any) => (
-              <tr key={wf.id} className="border-b border-gray-700 hover:bg-gray-750">
-                <td className="p-4 text-white font-medium">
-                  <Link href={`/automation/${wf.id}`} className="hover:text-blue-400">
-                    {wf.name}
-                  </Link>
-                </td>
-                <td className="p-4 text-gray-300">
-                  <span className="bg-gray-700 px-2 py-1 rounded text-xs">
-                    {wf.triggerType}
-                  </span>
-                </td>
-                <td className="p-4">
-                  <button
-                    onClick={() => toggleMutation.mutate(wf.id)}
-                    className={`px-3 py-1 rounded-full text-xs font-semibold ${
-                      wf.isActive ? 'bg-green-900/50 text-green-400' : 'bg-red-900/50 text-red-400'
-                    }`}
-                  >
-                    {wf.isActive ? 'Active' : 'Inactive'}
-                  </button>
-                </td>
-                <td className="p-4 text-gray-400 text-sm">
-                  {wf.runs?.[0] ? new Date(wf.runs[0].startedAt).toLocaleString() : 'Never'}
-                  {wf.runs?.[0] && (
-                    <span className={`ml-2 ${wf.runs[0].status === 'SUCCESS' ? 'text-green-400' : 'text-red-400'}`}>
-                      ({wf.runs[0].status})
-                    </span>
-                  )}
-                </td>
-                <td className="p-4 text-right space-x-2">
-                  {wf.triggerType === 'MANUAL' && (
-                    <button
-                      onClick={() => triggerMutation.mutate(wf.id)}
-                      disabled={!wf.isActive}
-                      className="text-blue-400 hover:text-blue-300 text-sm disabled:opacity-50"
-                    >
-                      Run Now
-                    </button>
-                  )}
-                  <Link href={`/automation/${wf.id}`} className="text-gray-400 hover:text-white text-sm">
-                    View
-                  </Link>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-        {workflows?.length === 0 && (
-          <div className="p-8 text-center text-gray-400">
-            No workflows found. Create one to get started.
-          </div>
-        )}
-      </div>
+      <DataTable
+        columns={columns}
+        data={workflows}
+        isLoading={isLoading}
+        emptyMessage="No workflow automations built yet."
+        onRowClick={(row) => router.push(`/automation/${row.id}`)}
+      />
     </div>
   );
 }
