@@ -36,6 +36,8 @@ import {
   Terminal,
   Activity,
 } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
+import { apiClient } from "@/lib/api-client";
 import { useAuth } from "@/hooks/useAuth";
 
 interface SidebarProps {
@@ -49,6 +51,7 @@ interface SidebarSubItem {
   href: string;
   icon: React.ComponentType<any>;
   active: boolean;
+  badge?: number | string;
 }
 
 interface SidebarItem {
@@ -68,6 +71,17 @@ interface MenuGroup {
 export function Sidebar({ collapsed = false, setCollapsed, onItemClick }: SidebarProps) {
   const pathname = usePathname();
   const { user, isAdmin, isEmployee, hasPermission } = useAuth();
+
+  const { data: inboxData } = useQuery({
+    queryKey: ["leads-inbox-count"],
+    queryFn: async () => {
+      const { data } = await apiClient.get("/crm/contact-submissions?status=NEW");
+      return data as { data: Array<{ status?: string }>; total: number };
+    },
+    staleTime: 30_000,
+  });
+
+  const unpromotedCount = (inboxData?.data ?? []).filter((s) => s.status === "NEW").length;
 
   const menuGroups: MenuGroup[] = [];
 
@@ -153,7 +167,13 @@ export function Sidebar({ collapsed = false, setCollapsed, onItemClick }: Sideba
       disabled: false,
       subitems: [
         { label: "Kanban Board", href: "/crm", icon: Layers, active: pathname === "/crm" },
-        { label: "Leads Inbox", href: "/leads-inbox", icon: Inbox, active: pathname === "/leads-inbox" },
+        {
+          label: "Leads Inbox",
+          href: "/leads-inbox",
+          icon: Inbox,
+          active: pathname === "/leads-inbox",
+          badge: unpromotedCount > 0 ? unpromotedCount : undefined,
+        },
         { label: "Quotes", href: "/crm/quotes", icon: Quote, active: pathname.startsWith("/crm/quotes") },
       ],
     });
@@ -403,8 +423,13 @@ export function Sidebar({ collapsed = false, setCollapsed, onItemClick }: Sideba
                                         : "text-muted-foreground hover:text-foreground"
                                     }`}
                                   >
-                                    <SubIcon className="h-3.5 w-3.5" />
-                                    <span>{sub.label}</span>
+                                    <SubIcon className="h-3.5 w-3.5 shrink-0" />
+                                    <span className="flex-1 min-w-0 truncate">{sub.label}</span>
+                                    {sub.badge !== undefined && (
+                                      <span className="rounded-full bg-primary/20 text-primary px-1.5 py-0.5 text-[9px] font-bold leading-none shrink-0">
+                                        {sub.badge}
+                                      </span>
+                                    )}
                                   </Link>
                                 </li>
                               );

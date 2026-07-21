@@ -89,6 +89,33 @@ model RefreshToken {
   @@schema("auth")
 }
 
+// --- schema: "cms" ---
+
+model ContactSubmission {
+  id        String           @id @default(uuid())
+  name      String
+  email     String
+  phone     String?
+  company   String?
+  subject   String?
+  message   String           @db.Text
+  source    String           @default("contact-form")
+  status    SubmissionStatus @default(NEW)
+  createdAt DateTime         @default(now())
+  updatedAt DateTime         @updatedAt
+
+  @@index([status])
+  @@schema("cms")
+}
+
+enum SubmissionStatus {
+  NEW
+  CONTACTED
+  ARCHIVED
+
+  @@schema("cms")
+}
+
 // --- schema: "clients" ---
 
 model Client {

@@ -144,7 +144,7 @@ export default function FinancePage() {
               tickFormatter={(v) => `₹${(v / 1000).toFixed(0)}k`} />
             <Tooltip
               contentStyle={{ background: "hsl(var(--card))", border: "1px solid hsl(var(--border))", borderRadius: "8px", fontSize: "12px" }}
-              formatter={(value: number) => [`₹${value.toLocaleString("en-IN")}`, ""]}
+              formatter={(value: any) => [`₹${Number(value || 0).toLocaleString("en-IN")}`, ""]}
             />
             <Legend wrapperStyle={{ fontSize: "12px" }} />
             <Line type="monotone" dataKey="revenue" stroke={CHART_COLORS.revenue} strokeWidth={2} dot={false} name="Revenue" />
@@ -165,7 +165,7 @@ export default function FinancePage() {
               tickFormatter={(v) => `₹${(v / 1000).toFixed(0)}k`} />
             <Tooltip
               contentStyle={{ background: "hsl(var(--card))", border: "1px solid hsl(var(--border))", borderRadius: "8px", fontSize: "12px" }}
-              formatter={(value: number) => [`₹${value.toLocaleString("en-IN")}`, "Net Profit"]}
+              formatter={(value: any) => [`₹${Number(value || 0).toLocaleString("en-IN")}`, "Net Profit"]}
             />
             <Bar dataKey="profit" fill={CHART_COLORS.profit} radius={[4, 4, 0, 0]} name="Net Profit" />
           </BarChart>

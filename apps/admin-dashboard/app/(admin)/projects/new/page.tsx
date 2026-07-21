@@ -19,7 +19,7 @@ const schema = z.object({
   clientId: z.string().optional(),
   startDate: z.string().optional(),
   dueDate: z.string().optional(),
-  budget: z.coerce.number().min(0).optional(),
+  budget: z.preprocess((val) => (val === "" || val === undefined || Number.isNaN(Number(val)) ? undefined : Number(val)), z.number().min(0).optional()),
 });
 type FormValues = z.infer<typeof schema>;
 
@@ -28,7 +28,7 @@ export default function NewProjectPage() {
   const createProject = useCreateProject();
   const { data: clients } = useClients({ limit: 100 });
 
-  const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<FormValues>({
+  const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm({
     resolver: zodResolver(schema),
     defaultValues: { status: "PLANNING", priority: "MEDIUM" },
   });

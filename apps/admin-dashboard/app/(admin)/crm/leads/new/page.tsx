@@ -23,7 +23,7 @@ const schema = z.object({
   company: z.string().optional(),
   source: z.string().optional(),
   stage: z.enum(["NEW", "CONTACTED", "QUALIFIED", "PROPOSAL", "NEGOTIATION", "WON", "LOST"]),
-  value: z.coerce.number().min(0).optional(),
+  value: z.preprocess((val) => (val === "" || val === undefined || Number.isNaN(Number(val)) ? undefined : Number(val)), z.number().min(0).optional()),
   notes: z.string().optional(),
 });
 
@@ -39,7 +39,7 @@ export default function NewLeadPage() {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
-  } = useForm<FormValues>({
+  } = useForm({
     resolver: zodResolver(schema),
     defaultValues: { stage: defaultStage },
   });

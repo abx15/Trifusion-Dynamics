@@ -47,7 +47,15 @@ export default function Header() {
         </nav>
 
         {/* Desktop Call to Action */}
-        <div className="hidden md:flex items-center">
+        <div className="hidden md:flex items-center gap-5">
+          <a
+            href={process.env.NEXT_PUBLIC_CLIENT_PORTAL_URL || "https://portal.trifusiondynamics.com/login"}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-xs font-semibold text-slate-300 hover:text-white transition-colors"
+          >
+            Client Login
+          </a>
           <Link
             href="/contact"
             className="group relative inline-flex items-center gap-2 overflow-hidden rounded-full bg-gradient-to-r from-primary to-secondary px-5 py-2.5 text-sm font-semibold text-black transition-all hover:scale-102 active:scale-98"
@@ -83,10 +91,19 @@ export default function Header() {
                 {link.label}
               </Link>
             ))}
+            <a
+              href={process.env.NEXT_PUBLIC_CLIENT_PORTAL_URL || "https://portal.trifusiondynamics.com/login"}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() => setIsOpen(false)}
+              className="text-lg font-medium text-slate-400 hover:text-white transition-colors border-b border-white/5 pb-2"
+            >
+              Client Login
+            </a>
             <Link
               href="/contact"
               onClick={() => setIsOpen(false)}
-              className="mt-4 flex w-full items-center justify-center gap-2 rounded-full bg-gradient-to-r from-primary to-secondary py-3.5 text-center font-semibold text-black"
+              className="mt-2 flex w-full items-center justify-center gap-2 rounded-full bg-gradient-to-r from-primary to-secondary py-3.5 text-center font-semibold text-black"
             >
               Book Consultation
               <ArrowRight className="h-4 w-4" />

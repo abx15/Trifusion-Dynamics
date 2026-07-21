@@ -1,5 +1,6 @@
-import { Controller, Post, Patch, Param, Body, UseGuards, Get, UseInterceptors } from '@nestjs/common';
+import { Controller, Post, Patch, Param, Body, UseGuards, Get, Query, UseInterceptors } from '@nestjs/common';
 import { CacheInterceptor, CacheKey, CacheTTL } from '@nestjs/cache-manager';
+import { Throttle } from '@nestjs/throttler';
 import { LeadsService } from './leads.service';
 import { InvoicesService } from './invoices.service';
 import { TasksService } from './tasks.service';
@@ -23,6 +24,17 @@ export class StubsController {
   @RequirePermissions('crm:write')
   createLead(@Body() body: any) {
     return this.leadsService.createLead(body);
+  }
+
+  @Post('crm/leads/from-submission/:submissionId')
+  @RequirePermissions('crm:write')
+  promoteSubmissionToLead(@Param('submissionId') submissionId: string) {
+    return this.leadsService.promoteSubmissionToLead(submissionId);
+  }
+
+  @Get('crm/contact-submissions')
+  getContactSubmissions(@Query() query: any) {
+    return this.leadsService.getSubmissions(query);
   }
 
   @Patch('crm/leads/:id/stage')
@@ -79,9 +91,15 @@ export class StubsController {
   }
 
   // CMS
+  @Throttle({ default: { limit: 3, ttl: 60000 } })
   @Post('cms/leads')
-  createCmsLead() {
-    return { id: 'cms_lead_1' };
+  createCmsLead(@Body() body: any) {
+    return this.leadsService.createSubmission(body);
+  }
+
+  @Get('cms/leads')
+  getCmsLeads(@Query() query: any) {
+    return this.leadsService.getSubmissions(query);
   }
 
   // Helpdesk
@@ -145,11 +163,9 @@ export class StubsController {
     return [{ id: 'faq_1', question: 'How?' }];
   }
 
-  @UseInterceptors(CacheInterceptor)
-  @CacheTTL(30000)
   @Get('crm/leads')
   getLeads() {
-    return [{ id: 'lead_1', name: 'John Doe' }];
+    return this.leadsService.getLeads();
   }
 
 }
