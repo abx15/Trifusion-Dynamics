@@ -1,7 +1,9 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Inter, Outfit } from "next/font/google";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
+import StickyMobileCTA from "@/components/sections/StickyMobileCTA";
+import ServiceWorkerRegistration from "@/components/ServiceWorkerRegistration";
 import "./globals.css";
 
 const inter = Inter({
@@ -16,6 +18,13 @@ const outfit = Outfit({
   weight: ["400", "500", "600", "700", "800"],
 });
 
+export const viewport: Viewport = {
+  themeColor: "#070a13",
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+};
+
 export const metadata: Metadata = {
   title: {
     default: "Trifusion Dynamics | Full-Stack & AI-Powered SaaS Development",
@@ -23,6 +32,16 @@ export const metadata: Metadata = {
   },
   description:
     "We build modern, resilient full-stack applications and integrate bespoke AI automations to transform operations for Indian SMBs and startups.",
+  manifest: "/manifest.json",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "black-translucent",
+    title: "Trifusion-Dynamics",
+  },
+  icons: {
+    icon: "/favicon.ico",
+    apple: "/icons/icon-192.png",
+  },
   metadataBase: new URL(
     process.env.NEXT_PUBLIC_SITE_URL || "https://trifusiondynamics.com"
   ),
@@ -65,10 +84,12 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(orgJsonLd) }}
         />
       </head>
-      <body className="min-h-full flex flex-col bg-[#070a13] text-slate-100 font-sans">
+      <body className="min-h-full flex flex-col bg-[#070a13] text-slate-100 font-sans pb-16 lg:pb-0">
+        <ServiceWorkerRegistration />
         <Header />
         <main className="flex-1 flex flex-col">{children}</main>
         <Footer />
+        <StickyMobileCTA />
       </body>
     </html>
   );

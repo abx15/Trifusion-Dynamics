@@ -8,7 +8,10 @@
         "build": "turbo build",
         "lint": "turbo lint",
         "clean": "turbo clean",
-        "test:api": "newman run postman/trifusion-dynamics.postman_collection.json -e postman/local.postman_environment.json --reporters cli,json --reporter-json-export postman/results.json"
+        "test:api": "newman run postman/trifusion-dynamics.postman_collection.json -e postman/local.postman_environment.json --reporters cli,json --reporter-json-export postman/results.json",
+        "docker:up": "docker compose -f infra/docker/docker-compose.yml up --build",
+        "docker:down": "docker compose -f infra/docker/docker-compose.yml down",
+        "docker:logs": "docker compose -f infra/docker/docker-compose.yml logs -f"
     },
     "devDependencies": {
         "autocannon": "^8.0.0",

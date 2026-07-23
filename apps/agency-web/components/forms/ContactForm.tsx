@@ -107,7 +107,7 @@ export default function ContactForm() {
 
   if (status === "success") {
     return (
-      <div className="glass-panel rounded-3xl p-8 sm:p-12 text-center border border-primary/20 bg-primary/5 flex flex-col items-center gap-4">
+      <div className="glass-panel rounded-3xl p-8 sm:p-12 text-center border border-primary/20 bg-primary/5 flex flex-col items-center gap-4 max-w-2xl mx-auto">
         <CheckCircle2 className="h-16 w-16 text-primary" />
         <h3 className="text-2xl font-display font-bold text-white mt-2">Message Sent!</h3>
         <p className="text-slate-300 text-sm max-w-sm leading-relaxed">
@@ -115,7 +115,7 @@ export default function ContactForm() {
         </p>
         <button
           onClick={() => setStatus("idle")}
-          className="mt-6 rounded-full border border-white/10 bg-white/5 px-6 py-2.5 text-xs font-semibold text-white hover:bg-white/10 transition-colors"
+          className="mt-4 min-h-[44px] rounded-full border border-white/10 bg-white/5 px-6 py-2.5 text-xs font-semibold text-white hover:bg-white/10 active:scale-95 transition-colors"
         >
           Send Another Message
         </button>
@@ -124,7 +124,7 @@ export default function ContactForm() {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="glass-panel rounded-3xl p-8 sm:p-10 space-y-6">
+    <form onSubmit={handleSubmit} className="glass-panel rounded-3xl p-6 sm:p-10 space-y-6 max-w-2xl mx-auto">
       {/* Rate Limit Alert */}
       {status === "rate-limit" && (
         <div className="rounded-2xl bg-amber-500/10 border border-amber-500/20 p-4 flex items-start gap-3 text-amber-300 text-xs sm:text-sm">
@@ -141,7 +141,7 @@ export default function ContactForm() {
         </div>
       )}
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 sm:gap-6">
         {/* Name */}
         <div>
           <label htmlFor="name" className="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">
@@ -155,7 +155,7 @@ export default function ContactForm() {
             onChange={handleChange}
             placeholder="Arun Kumar"
             disabled={status === "loading"}
-            className={`w-full rounded-xl border bg-[#03060c] px-4 py-3 text-sm text-white placeholder-slate-600 focus:outline-none focus:ring-1 ${
+            className={`w-full min-h-[46px] rounded-xl border bg-[#03060c] px-4 py-3 text-sm text-white placeholder-slate-600 focus:outline-none focus:ring-1 ${
               errors.name
                 ? "border-rose-500/50 focus:ring-rose-500"
                 : "border-white/10 focus:border-primary/50 focus:ring-primary"
@@ -177,7 +177,7 @@ export default function ContactForm() {
             onChange={handleChange}
             placeholder="arun@trifusion.ai"
             disabled={status === "loading"}
-            className={`w-full rounded-xl border bg-[#03060c] px-4 py-3 text-sm text-white placeholder-slate-600 focus:outline-none focus:ring-1 ${
+            className={`w-full min-h-[46px] rounded-xl border bg-[#03060c] px-4 py-3 text-sm text-white placeholder-slate-600 focus:outline-none focus:ring-1 ${
               errors.email
                 ? "border-rose-500/50 focus:ring-rose-500"
                 : "border-white/10 focus:border-primary/50 focus:ring-primary"
@@ -187,7 +187,7 @@ export default function ContactForm() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 sm:gap-6">
         {/* Phone */}
         <div>
           <label htmlFor="phone" className="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">
@@ -201,7 +201,7 @@ export default function ContactForm() {
             onChange={handleChange}
             placeholder="+91 98765 43210"
             disabled={status === "loading"}
-            className="w-full rounded-xl border border-white/10 bg-[#03060c] px-4 py-3 text-sm text-white placeholder-slate-600 focus:outline-none focus:ring-1 focus:border-primary/50 focus:ring-primary"
+            className="w-full min-h-[46px] rounded-xl border border-white/10 bg-[#03060c] px-4 py-3 text-sm text-white placeholder-slate-600 focus:outline-none focus:ring-1 focus:border-primary/50 focus:ring-primary"
           />
         </div>
 
@@ -218,7 +218,7 @@ export default function ContactForm() {
             onChange={handleChange}
             placeholder="AI Platform Architecture Consulting"
             disabled={status === "loading"}
-            className="w-full rounded-xl border border-white/10 bg-[#03060c] px-4 py-3 text-sm text-white placeholder-slate-600 focus:outline-none focus:ring-1 focus:border-primary/50 focus:ring-primary"
+            className="w-full min-h-[46px] rounded-xl border border-white/10 bg-[#03060c] px-4 py-3 text-sm text-white placeholder-slate-600 focus:outline-none focus:ring-1 focus:border-primary/50 focus:ring-primary"
           />
         </div>
       </div>
@@ -249,7 +249,7 @@ export default function ContactForm() {
       <button
         type="submit"
         disabled={status === "loading"}
-        className="flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-primary to-secondary py-4 text-center text-sm font-semibold text-black hover:opacity-90 active:scale-[0.99] disabled:opacity-55 disabled:cursor-not-allowed transition-all"
+        className="flex w-full items-center justify-center gap-2 min-h-[50px] rounded-xl bg-gradient-to-r from-primary to-secondary py-3.5 text-center text-sm font-semibold text-black hover:opacity-90 active:scale-[0.99] disabled:opacity-55 disabled:cursor-not-allowed transition-all"
       >
         {status === "loading" ? (
           <>

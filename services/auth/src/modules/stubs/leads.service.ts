@@ -157,7 +157,7 @@ export class LeadsService {
   }
 
   async getLeads() {
-    return this.leads;
+    return { data: this.leads, total: this.leads.length, page: 1, limit: 100 };
   }
 
   async moveStage(id: string, newStage: string) {
